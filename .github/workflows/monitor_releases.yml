@@ -41,7 +41,10 @@ jobs:
           
           if [[ "$latest_version" != "$installed_version" ]]; then
             echo "New release available: $latest_version"
-            # Add your logic to trigger updates or notifications here
+
+            # Notify Slack about the new release
+            slack_message="New release available: $latest_version"
+            curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$slack_message\"}" https://hooks.slack.com/services/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
           else
             echo "No new releases available"
           fi
