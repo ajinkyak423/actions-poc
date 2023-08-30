@@ -44,7 +44,8 @@ jobs:
 
             # Notify Slack about the new release
             slack_message="New release available: $latest_version"
-            curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$slack_message\"}" "https://hooks.slack.com/services/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"
+            curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$slack_message\"}" "https://hooks.slack.com/services/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"
+
           else
             echo "No new releases available"
           fi
