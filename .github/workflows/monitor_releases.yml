@@ -36,8 +36,9 @@ jobs:
           installed_version=$CURRENT_VERSION
           latest_version=${{ steps.get-latest-release.outputs.latest_release }}
           
-          if [[ "$latest_version" != "$CURRENT_VERSION" ]]; then
+          if [[ "$latest_version" != "$installed_version" ]]; then
             echo "New release available: $latest_version"
+            # Add your logic to trigger updates or notifications here
           else
             echo "No new releases available"
           fi
