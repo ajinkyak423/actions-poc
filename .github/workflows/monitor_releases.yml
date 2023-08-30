@@ -1,0 +1,43 @@
+name: Monitor Runner Releases
+
+on:
+  schedule:
+    - cron: "0 0 */15 * *"
+
+jobs:
+  monitor-releases:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get Latest Release
+        id: get-latest-release
+        run: |
+          latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
+          echo "::set-output name=latest_release::$latest_release"
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Get Current Version
+        id: get-current-version
+        run: |
+          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+
+      - name: Run Script
+        run: python /path/to/your/script.py
+
+      - name: Compare Versions and Take Action
+        run: |
+          installed_version=$CURRENT_VERSION
+          latest_version=${{ steps.get-latest-release.outputs.latest_release }}
+          
+          if [[ "$latest_version" != "$CURRENT_VERSION" ]]; then
+            echo "New release available: $latest_version"
+          else
+            echo "No new releases available"
+          fi
