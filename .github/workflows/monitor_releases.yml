@@ -49,10 +49,6 @@ jobs:
           echo "latest_release_previous_major=$latest_release_previous_major"
           echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
 
-      - name: Debug Latest Release from Previous Major Version
-        run: |
-          echo "Latest release from previous major version: $latest_release_previous_major"
-
       - name: Compare Versions and Take Action
         run: |
           installed_version=$CURRENT_VERSION
