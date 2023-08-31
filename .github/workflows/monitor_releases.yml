@@ -43,11 +43,6 @@ jobs:
           latest_release_previous_major=$(curl -s "https://api.github.com/repos/actions/runner/releases?per_page=1" | jq -r ".[] | select(.tag_name | startswith(\"$previous_major_version\")) | .tag_name")
           echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
 
-
-
-      # - name: Run Script
-      #   run: python /path/to/your/script.py
-
       - name: Compare Versions and Take Action
         run: |
           installed_version=$CURRENT_VERSION
