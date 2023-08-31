@@ -26,22 +26,23 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Get Current Version
-        id: get-current-version
+      - name: Get Latest Release
+        id: get-latest-release
         run: |
-          echo "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
+          latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
+          echo "latest_release=$latest_release" >> $GITHUB_ENV
 
       - name: Get Latest Release from Previous Major Version
         id: get-latest-release-previous-major
         run: |
-          latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
-          echo "::set-output name=latest_release::$latest_release"
-          previous_major_version=$(echo $latest_version | awk -F'.' '{print $1"."$2-1}')
+          latest_release=$latest_release
+          previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
           echo "Previous major version: $previous_major_version"
 
           # Get the latest release from the previous major version
           latest_release_previous_major=$(curl -s "https://api.github.com/repos/actions/runner/releases?per_page=1" | jq -r ".[] | select(.tag_name | startswith(\"$previous_major_version\")) | .tag_name")
-          echo "::set-output name=latest_release_previous_major::$latest_release_previous_major"
+          echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
+
 
 
       # - name: Run Script
@@ -67,3 +68,4 @@ jobs:
           else
             echo "No releases available for the previous major version"
           fi
+
