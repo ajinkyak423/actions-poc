@@ -38,11 +38,11 @@ jobs:
 
           # Get all releases from the repository
           all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
-          echo "All releases: $all_releases"
+          # echo "All releases: $all_releases"
 
           # Filter releases by the previous major version
           releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
-          echo "Releases from previous major version: $releases_previous_major"
+          # echo "Releases from previous major version: $releases_previous_major"
 
           # Get the latest release from the previous major version
           latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
