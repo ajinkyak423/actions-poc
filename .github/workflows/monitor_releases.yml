@@ -55,7 +55,7 @@ jobs:
       - name: Compare Versions and Take Action
         run: |
           installed_version=$CURRENT_VERSION
-          latest_version_previous_major=${{ steps.get-latest-release-previous-major.outputs.latest_release_previous_major }}
+          latest_version_previous_major=$latest_release_previous_major
           
           if [ "$latest_version_previous_major" != "" ]; then
             echo "Latest release from previous major version: $latest_version_previous_major"
