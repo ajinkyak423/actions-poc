@@ -26,16 +26,31 @@ jobs:
           latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
           echo "latest_release=$latest_release" >> $GITHUB_ENV
 
+      - name: Debug Latest Release
+        run: |
+          echo "Latest release: $latest_release"
+
       - name: Get Latest Release from Previous Major Version
         id: get-latest-release-previous-major
         run: |
-          latest_release=$latest_release
           previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
           echo "Previous major version: $previous_major_version"
 
+          # Get all releases from the repository
+          all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
+          echo "All releases: $all_releases"
+
+          # Filter releases by the previous major version
+          releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
+          echo "Releases from previous major version: $releases_previous_major"
+
           # Get the latest release from the previous major version
-          latest_release_previous_major=$(curl -s "https://api.github.com/repos/actions/runner/releases?per_page=1" | jq -r ".[] | select(.tag_name | startswith(\"$previous_major_version\")) | .tag_name")
+          latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
           echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
+
+      - name: Debug Latest Release from Previous Major Version
+        run: |
+          echo "Latest release from previous major version: $latest_release_previous_major"
 
       - name: Compare Versions and Take Action
         run: |
@@ -57,4 +72,3 @@ jobs:
           else
             echo "No releases available for the previous major version"
           fi
-
