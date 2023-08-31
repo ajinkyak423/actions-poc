@@ -34,7 +34,8 @@ jobs:
       - name: Get Latest Release from Previous Major Version
         id: get-latest-release-previous-major
         run: |
-          latest_version="2.308.0"  # Replace with actual latest version
+          latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
+          echo "::set-output name=latest_release::$latest_release"
           previous_major_version=$(echo $latest_version | awk -F'.' '{print $1"."$2-1}')
           echo "Previous major version: $previous_major_version"
 
@@ -53,16 +54,14 @@ jobs:
           
           if [[ "$latest_version_previous_major" != "" ]]; then
             echo "Latest release from previous major version: $latest_version_previous_major"
-            
-            if [[ "$latest_version_previous_major" != "$installed_version" ]]; then
-              echo "New release available: $latest_version_previous_major"
+        
+          if [[ "$latest_version_previous_major" != "$installed_version" ]]; then
+            echo "New release available: $latest_version_previous_major"
 
-              # Notify Slack about the new release
-              slack_message="New release available: $latest_version_previous_major"
-              curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$slack_message\"}" "https://hooks.slack.com/services/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"
-            else
-              echo "No new releases available"
-            fi
+            # Notify Slack about the new release
+            slack_message="New release available: $latest_version"
+            curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$slack_message\"}" "https://hooks.slack.com/services/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"
+
           else
-            echo "No releases available for the previous major version"
+            echo "No new releases available"
           fi
