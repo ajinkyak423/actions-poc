@@ -59,9 +59,13 @@ jobs:
             
             if [ "$latest_version_previous_major" != "$installed_version" ]; then  #need to change this using this for testing as secret is setup to 308
             notify=true
+            echo "notify=$notify" >> $GITHUB_ENV
             echo "notify=$notify"
             echo "New release available: $latest_version_previous_major"
             else
+              notify=false
+              echo "notify=$notify" >> $GITHUB_ENV
+              echo "notify=$notify"
               echo "No new releases available"
             fi
           else
