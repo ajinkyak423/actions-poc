@@ -36,15 +36,6 @@ jobs:
       run: |
         echo '${{ toJSON(github.event.inputs) }}'
 
-
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-      with:
-        token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-        repository: ${{ inputs.REPOSITORY }}
-        path: ${{ inputs.REPOSITORY }}
-        ref: ${{ inputs.REF }}
-
     - name: Format inputs for postdata body
       id: post-body
       run: |
