@@ -44,6 +44,7 @@ jobs:
           echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
 
       - name: Compare Versions and Take Action
+        id: take_actions
         run: |
           installed_version=$CURRENT_VERSION
           latest_version_previous_major=$latest_release_previous_major
@@ -67,10 +68,12 @@ jobs:
           fi
 
       - name: Create PR and Notify via Github-actions
+        if: steps.take_actions.outputs.notif
         run: |
           postData='{
             "ref": "main",
             "inputs": {
+              "REPOSITORY": "${{ github.repository }}",
               "TITLE": "GitHub action runner update",
               "BODY": "New release available: $latest_version_previous_major",
               "SLACK_CHANNEL": "actions-notif"
