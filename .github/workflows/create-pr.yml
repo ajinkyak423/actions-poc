@@ -50,9 +50,7 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-        repository : ${{inputs.REPOSITORY}}
         base: main
-        head: ${{github.sha}}
         commit-message: Update report
         title: ${{ inputs.TITLE }}
         body: ${{ inputs.BODY }}
