@@ -68,7 +68,7 @@ jobs:
           fi
 
       - name: Create PR and Notify via Github-actions
-        if: steps.take_actions.outputs.notif
+        # if: steps.take_actions.outputs.notif
         run: |
           postData='{
             "ref": "main",
