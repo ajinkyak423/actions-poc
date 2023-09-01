@@ -50,13 +50,10 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-        path: ./
+        repository : ${{inputs.REPOSITORY}}
+        base: main
+        head: ${{github.sha}}
         commit-message: Update report
-        committer: GitHub <noreply@github.com>
-        author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-        signoff: false
-        branch: example-patches
-        delete-branch: false
         title: ${{ inputs.TITLE }}
         body: ${{ inputs.BODY }}
         labels: |
