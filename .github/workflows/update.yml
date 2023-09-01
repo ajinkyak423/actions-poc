@@ -1,0 +1,27 @@
+name: Manual Script Execution
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Script
+        run: |
+          ./update_runner.sh
+
+      - name: Commit and Push Changes
+        run: |
+          git config user.name "ajinkyak423"
+          git config user.email "ajinkyakumbhar423@gmail.com"
+
+          # Commit changes
+          git commit -am "Update files via script"
+          
+          # Push changes back to the repository
+          git push
