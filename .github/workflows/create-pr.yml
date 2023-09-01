@@ -50,7 +50,7 @@ jobs:
       uses: peter-evans/create-pull-request@v5
       with:
         token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-        path: ajinkyak423/actions-poc
+        path: ./
         commit-message: Update report
         committer: GitHub <noreply@github.com>
         author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
