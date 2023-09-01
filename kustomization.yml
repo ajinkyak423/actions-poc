@@ -1,0 +1,102 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+- includeSelectors: true
+  pairs:
+    ridecell.io/cloud: aws
+    ridecell.io/cloud-region: us-west-2
+    ridecell.io/cluster-name: us-support.prod.kops.ridecell.io
+    ridecell.io/environment: support
+    ridecell.io/region: us
+
+resources:
+- ../../apps/argo-cd/
+- ../../apps/cert-manager/
+- ../../apps/cluster-autoscaler/
+- ../../apps/pod-identity-webhook/
+- ../../apps/traefik/
+- ../../apps/crossplane/
+- ../../apps/external-dns/
+- ../../apps/ridecell-controllers/
+- ../../apps/monitoring/
+- ../../apps/fluent/
+- ../../apps/keda/
+- ../../apps/kubecost/
+- ../../base/rbac/
+- ../../apps/pypicloud/
+- ../../apps/defectdojo/
+- ../../apps/teleport-cluster/
+- ../../apps/grafana/
+- actions-runner-system
+- argo/us-dev-apps.yml
+- argo/us-prod-apps.yml
+- argo/eu-prod-apps.yml
+- argo/us-support-apps.yml
+- argo/cluster-secrets.yml
+- argo/us-prod-infra-app.yml
+- argo/eu-prod-infra-app.yml
+- storage-class.yml
+- traefik/traefik-forward-auth.yml
+- ridecell-controllers/ridecell-controllers.yml
+- support-rds.yml
+- prometheus/prometheus-thanos.yml
+#- notify-aws-events.yaml
+#- yet-another-cloudwatch-exporter/configmap.yml
+
+
+patches:
+- path: argo/ingress.yml
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: argocd-ingress
+    namespace: argocd
+    version: v1
+- path: prometheus/ingress.yml
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: prometheus-infra-proxy
+    namespace: prometheus
+    version: v1
+- path: monitoring/alert-manager-ingress.yml
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: alertmanager-infra-proxy
+    namespace: alertmanager
+    version: v1
+- path: prometheus/thanos-sidecar-ingress.yml
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: prometheus-infra-thanos
+    namespace: prometheus
+    version: v1
+- path: argo/argocd-cm.patch.yml
+- path: argo/argocd-secret.patch.yml
+- path: prometheus/prometheus.yml
+- path: prometheus/prometheus-infra-proxy.patch.yml
+- path: prometheus/prometheus-infra-basic-auth.patch.yml
+- path: prometheus/prometheus-infra-secrets.patch.yml
+- path: prometheus/prometheus-infra-additional-scrape-configs.patch.yml
+- path: monitoring/alert-manager.patch.yml
+- path: monitoring/alertmanager-infra-proxy.patch.yml
+- path: monitoring/alertmanager-infra-basic-auth.patch.yml
+- path: monitoring/alertmanager-infra.patch.yml
+- path: ridecell-controllers/ridecell-controllers.patch.yml
+- path: ridecell-controllers/ridecell-controllers-svcaccount.patch.yml
+- path: cluster-autoscaler.yml
+- path: fluent/fluentd.yml
+- path: fluent/fluent-sumologic-es.patch.yml
+- path: traefik/traefik.yml
+
+
+images:
+- name: summerwind/actions-runner
+  newTag: v2.308.0-ubuntu-20.04
+- name: us.gcr.io/ridecell-1/ridecell-controllers
+  newTag: 1643797148-bcf06cb2-main
+- name: k8s.gcr.io/autoscaling/cluster-autoscaler
+  newTag: v1.22.1
