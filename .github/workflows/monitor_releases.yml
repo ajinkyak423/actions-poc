@@ -69,7 +69,7 @@ jobs:
       - name: Create PR and Notify via Github-actions
         run: |
           postData='{
-            "ref": "master",
+            "ref": "main",
             "inputs": {
               "TITLE": "GitHub action runner update",
               "BODY": "New release available: $latest_version_previous_major",
