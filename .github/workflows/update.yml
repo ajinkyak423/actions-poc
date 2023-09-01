@@ -22,8 +22,8 @@ jobs:
 
       - name: Commit and Push Changes
         run: |
-          git config user.name "Your GitHub Username"
-          git config user.email "your-email@example.com"
+          git config user.name "ajinkyak423"
+          git config user.email "ajinkyakumbhar423@gmail.com"
 
           # Commit changes
           git commit -am "Update $image_name image tag to ${{ github.event.inputs.newTag }}"
