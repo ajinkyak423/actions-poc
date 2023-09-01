@@ -10,10 +10,10 @@ on:
     inputs:
       REPOSITORY:
         description: 'The Ridecell repository where PR should be created, in the format Ridecell/{repo_name}'
-        required: true
+        required: false
       REF:
         description: 'The desired branch/tag/sha to merge into main/master'
-        required: true
+        required: false
       TITLE:
         description: 'Title for the Pull Request'
         required: true
@@ -28,13 +28,13 @@ on:
 
 jobs:
   create-pr:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     name: Create Pull Request
 
     steps:
-    - name: Display Workflow Inputs
-      run: |
-        echo '${{ toJSON(github.event.inputs) }}'
+    # - name: Display Workflow Inputs
+    #   run: |
+    #     echo '${{ toJSON(github.event.inputs) }}'
 
     # - name: Generate rc-infra-bot token
     #   id: infra-bot-token
