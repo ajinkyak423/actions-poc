@@ -74,9 +74,9 @@ jobs:
             "ref": "main",
             "inputs": {
               "REPOSITORY": "${{ github.repository }}",
-              "REF": "Runner-${{ github.env.latest_version_previous_major }}-upgrade",
+              "REF": "Runner--upgrade",
               "TITLE": "GitHub action runner update",
-              "BODY": "New release available: "${{ github.env.latest_version_previous_major }}" ",
+              "BODY": "New release available: ",
               "SLACK_CHANNEL": "actions-notif"
             }
           }'
