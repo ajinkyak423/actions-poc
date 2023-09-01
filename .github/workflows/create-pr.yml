@@ -32,111 +32,71 @@ jobs:
     name: Create Pull Request
 
     steps:
+    - name: Display Workflow Inputs
+      run: |
+        echo '${{ toJSON(github.event.inputs) }}'
 
-      - name: Display Workflow Inputs
-        run: |
-          echo '${{ toJSON(github.event.inputs) }}'
 
-      - name: Generate rc-infra-bot token
-        id: infra-bot-token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.RC_INFRA_BOT_APP_ID }}
-          private_key: ${{ secrets.RC_INFRA_BOT_PRIVATE_KEY }}
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+      with:
+        token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
+        repository: ${{ inputs.REPOSITORY }}
+        path: ${{ inputs.REPOSITORY }}
+        ref: ${{ inputs.REF }}
 
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ steps.infra-bot-token.outputs.token }}
-          repository: ${{ inputs.REPOSITORY }}
-          path: ${{ inputs.REPOSITORY }}
+    - name: Format inputs for postdata body
+      id: post-body
+      run: |
+        # It seems although input BODY was received in JSON format (e.g. newlines escaped),
+        # the escaped values gets converted. Hence, we need to format it to JSON again for
+        # building our postData body in the next step.
+        
+        echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
 
-      - name: Format inputs for postdata body
-        id: post-body
-        run: |
-          # It seems although input BODY was received in JSON format (e.g. newlines escaped),
-          # the escaped values gets converted. Hence, we need to format it to JSON again for
-          # building our postData body in the next step.
-          
-          echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
+    - name: Create Pull Request
+      id: cpr
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
+        commit-message: Update report
+        committer: GitHub <noreply@github.com>
+        author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+        signoff: false
+        branch: example-patches
+        delete-branch: false
+        title: ${{ inputs.TITLE }}
+        body: ${{ inputs.BODY }}
+        labels: |
+          report
+          automated pr
 
-      - name: Create Pull Request
-        id: cpr
-        run: |
-          # change cwd to checked out repository
-          git clone https://github.com/ajinkyak423/actions-poc.git  #changed this for personal repo
-          cd actions-poc
-          # get base branch name (usually master or main) through git command
-          BASE=$(git remote show origin | grep HEAD | awk '{print $3}')
-          postData='{
-            "title":"${{ inputs.TITLE }}",
-            "body":"${{ steps.post-body.outputs.PR_BODY }}",
-            "head":"${{ inputs.REF }}",
-            "base":"'$BASE'"
-          }'
-
-          # use curl -w and jq -s to save response and status_code header as one json object
-          response=$( curl -L \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ steps.infra-bot-token.outputs.token }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/${{ inputs.REPOSITORY }}/pulls \
-          -d "${postData}" \
-          -w '{"status_code": "%{http_code}"}' | jq -s )
-  
-          echo -e "Response body is:\n$response"
-
-          status_code=$(echo $response | jq -r '.[1].status_code')
-
-          if [ $status_code == '422' ]
-          then
-            # get reason for PR not being created.
-            # (Two jq commands since errors is an array holding json)
-            reason=$(echo $response | jq -r '.[0].errors' | jq -r '.[0].message')
-            echo "$reason"
-            if [[ $reason =~ 'pull request already exists' ]]
-            then
-              echo "Workflow will not recreate or replace the pull request"
-            else
-              exit 1
-            fi
-          elif [ $status_code == '201' ]
-          then
-            # save pull request url for notification step
-            PR_URL=$(echo $response | jq -r ".[0].html_url")
-            echo "pullreq_url=$PR_URL" >> $GITHUB_OUTPUT
-          else
-            echo "Unexpected status code $status_code in create PR API call. Exiting."
-            exit 1
-          fi
-
-      - name: Notify Devops of PR
-        id: slack-notify
-        uses: sonots/slack-notice-action@v3
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          username: GithubActions
-          status: custom
-          payload: |
-              {
-                  "channel": "#${{ inputs.SLACK_CHANNEL }}",
-                  "text": "New version available \nAutomated Pull Request Created",
-                  "blocks": [
-                  {
-                      "type": "header",
-                      "text": {
-                      "type": "plain_text",
-                      "text": "New version availabl"
-                      }
-                  }
-                  {
-                    "type": "section",
+    - name: Notify Devops of PR
+      id: slack-notify
+      uses: sonots/slack-notice-action@v3
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      with:
+        username: GithubActions
+        status: custom
+        payload: |
+            {
+                "channel": "#${{ inputs.SLACK_CHANNEL }}",
+                "text": "New version available \nAutomated Pull Request Created",
+                "blocks": [
+                {
+                    "type": "header",
                     "text": {
-                      "type": "mrkdwn",
-                      "text": "*Pull Request*:\n<${{ steps.cpr.outputs.pullreq_url }}|${{ inputs.TITLE }}>"
+                    "type": "plain_text",
+                    "text": "New version availabl"
                     }
+                }
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Pull Request*:\n${{ inputs.TITLE }}>"
                   }
-                ]
-              }
+                }
+              ]
+            }
