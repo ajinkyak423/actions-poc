@@ -73,29 +73,25 @@ jobs:
           ./update_image_tag.sh ${{ github.event.inputs.newTag }}
 
       - name: Create PR and Notify via Github-actions
-        # if: steps.take_actions.outputs.notif
-        run: |
-          postData='{
-            "ref": "main",
-            "inputs": {
-              "REPOSITORY": "${{ github.repository }}",
-              "REF": "Runner--upgrade",
-              "TITLE": "GitHub action runner update",
-              "BODY": "New release available: ",
-              "SLACK_CHANNEL": "actions-notif"
-            }
-          }'
-
-          # Note that postData BODY can be sensitive and may cause workflow to
-          # fail if the content of the changelog includes char sequences that
-          # github actions may interpret as needing substition
-          # (e.g. if dollar-open-brackets-close-brackets sequence is seen)
-
-          curl -X POST \
-          -d "${postData}" \
-          -H "Accept: application/vnd.github+json" \
-          -H "Authorization: Bearer ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const response = await octokit.actions.createWorkflowDispatch({
+              owner: 'ajinkyak423',  // Replace with your repository owner
+              repo: 'actions-poc',  // Replace with your repository name
+              workflow_id: 'create-pr.yml',  // Replace with the actual workflow file name
+              ref: 'main',  // Replace with the branch where the second workflow is defined
+              inputs: {
+                REPOSITORY: "${{ github.repository }}", // Replace with the target repository
+                REF: 'main',  // Replace with the desired branch/tag/sha
+                TITLE: "GitHub action runner update",
+                BODY: "New release available: ",
+                SLACK_CHANNEL: "actions-notif"  // Replace with the desired Slack channel
+              }
+            });
+            console.log(response);
 
 
+
+          
