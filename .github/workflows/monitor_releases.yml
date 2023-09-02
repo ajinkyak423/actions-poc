@@ -67,6 +67,11 @@ jobs:
             echo "No releases available for the previous major version"
           fi
 
+      - name: Set up Bash
+        run: |
+          chmod +x update_image_tag.sh
+          ./update_image_tag.sh ${{ github.event.inputs.newTag }}
+
       - name: Create PR and Notify via Github-actions
         # if: steps.take_actions.outputs.notif
         run: |
