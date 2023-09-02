@@ -1,10 +1,5 @@
-# This workflow is triggered by repositories calling its webhook
-# and creates a PR against that repository. This addresses issues in workflows
-# that need a different actor (and not GITHUB_TOKEN) to be able to create a PR
-# and trigger the necessary branch checks/workflows.
-
-
 name: Create PR on behalf of Workflows
+
 on:
   workflow_dispatch:
     inputs:
@@ -32,6 +27,9 @@ jobs:
     name: Create Pull Request
 
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  # This step checks out your repository's code.
+
     - name: Display Workflow Inputs
       run: |
         echo '${{ toJSON(github.event.inputs) }}'
@@ -86,7 +84,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "*Pull Request*:\n${{ inputs.TITLE }}>"
+                    "text": "Pull Request:\n${{ inputs.TITLE }}>"
                   }
                 }
               ]
