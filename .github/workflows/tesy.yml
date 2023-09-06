@@ -30,10 +30,13 @@ jobs:
       - name: Pull Latest Changes from Main
         run: |
           git fetch origin main:main
+          git checkout main
           git pull origin main
 
       - name: Push Changes to New Branch
         run: |
+          git checkout feature/update-file
+          git rebase main
           git push origin feature/update-file  # Push to the new branch
 
       - name: Create Pull Request
@@ -41,7 +44,7 @@ jobs:
         with:
           script: |
             const github = require('@actions/github');
-            const octokit = github.getOctokit(process.env.MY_GITHUB_ACTION_TOKEN);
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
             const newPullRequest = await octokit.pulls.create({
               owner: github.context.repo.owner,
