@@ -3,7 +3,7 @@ name: Create Pull Request
 on:
   push:
     branches:
-      - feature-branch  # Replace with the branch where you want to create a PR
+      - main  # Replace with the branch where you want to create a PR
 
 jobs:
   create-pr:

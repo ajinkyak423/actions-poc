@@ -3,7 +3,7 @@ name: Make Changes
 on:
   push:
     branches:
-      - feature-branch  # Replace with the branch where you want to make changes
+      - main  # Replace with the branch where you want to make changes
 
 jobs:
   make-changes:
