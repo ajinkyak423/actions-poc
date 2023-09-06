@@ -1,0 +1,28 @@
+name: Update File
+
+on:
+  push:
+    branches:
+      - main  # You can change this to the branch you want to trigger updates on
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Update File
+        run: |
+          # Add your script or command to update the file here
+          # For example, to append some text to a file:
+          echo "New content" >> yourfile.txt
+
+      - name: Commit Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add yourfile.txt
+          git commit -m "Update file via GitHub Actions"
+          git push

@@ -1,0 +1,27 @@
+name: Create Pull Request
+
+on:
+  push:
+    branches:
+      - main  # You can change this to the branch where updates are made
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Automated PR: Update file"
+          branch: main  # The branch you want to create the PR against
+          title: "Automated PR: Update file"
+          body: |
+            This PR updates the file via GitHub Actions.
+
+          base: main  # The target branch for the PR
+          files: yourfile.txt  # The path to the updated file
