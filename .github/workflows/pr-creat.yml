@@ -19,4 +19,3 @@ jobs:
           token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
           title: "Feature: Update file.txt"
           body: "This PR updates file.txt with the latest changes."
-          branch: feature-branch  # Replace with the branch name where changes were pushed

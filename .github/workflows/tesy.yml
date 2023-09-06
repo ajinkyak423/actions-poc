@@ -18,10 +18,12 @@ jobs:
           # Make your desired changes to the file(s) here
           echo "This is a change" >> file.txt
 
-      - name: Commit and Push Changes
+      - name: Commit Changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add .
           git commit -m "Made changes via GitHub Actions"
-          git push origin main  # Replace 'main' with your target branch
+
+      - name: Push Changes to Feature Branch
+        run: git push origin ${{ github.ref }}
