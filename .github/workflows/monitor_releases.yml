@@ -62,8 +62,8 @@ jobs:
           fi
       - name: Set up Bash
         run: |
-          chmod +x update_image_tag.sh
-          ./update_image_tag.sh ${{ github.event.inputs.newTag }}
+          sed -i "s/\( name: summerwind/actions-runner\n *newTag: \)./\1$1/" "kustomization.yml"
+          echo "Image tag for summerwind/actions-runner updated to $1"
 
 
       - name: Commit Changes
