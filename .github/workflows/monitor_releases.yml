@@ -79,6 +79,12 @@ jobs:
           git fetch origin main:main
           git pull origin main
 
+      - name: Push Changes to New Branch
+        run: |
+          git checkout feature/update-file
+          git rebase main
+          git push origin feature/update-file --force  # Force push to the new branch
+
       - name: Create PR and Notify via Github-actions
         # if: steps.take_actions.outputs.notif
         run: |

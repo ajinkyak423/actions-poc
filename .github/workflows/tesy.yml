@@ -1,37 +1,37 @@
-name: Update File and Create Pull Request
+# name: Update File and Create Pull Request
 
-on:
-  push:
-    branches:
-      - main  # You can change this to the branch you want to trigger updates on
+# on:
+#   push:
+#     branches:
+#       - main  # You can change this to the branch you want to trigger updates on
 
-jobs:
-  update-file-and-create-pr:
-    runs-on: ubuntu-latest
+# jobs:
+#   update-file-and-create-pr:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Check Out Repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Check Out Repository
+#         uses: actions/checkout@v2
 
-      - name: Update File
-        run: |
-          # Add your script or command to update the file here
-          # For example, to append some text to a file:
-          echo "New content" >> yourfile.txt
-      - name: Commit Changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git checkout -b feature/update-file  # Create a new branch for the changes
-          git add .
-          git commit -m "Update file via GitHub Actions"
-      - name: Pull Latest Changes from Main
-        run: |
-          git fetch origin main:main
-          git pull origin main
-      - name: Push Changes to New Branch
-        run: |
-          git checkout feature/update-file
-          git rebase main
-          git push origin feature/update-file --force  # Force push to the new branch
-    
+#       - name: Update File
+#         run: |
+#           # Add your script or command to update the file here
+#           # For example, to append some text to a file:
+#           echo "New content" >> yourfile.txt
+#       - name: Commit Changes
+#         run: |
+#           git config --local user.email "action@github.com"
+#           git config --local user.name "GitHub Action"
+#           git checkout -b feature/update-file  # Create a new branch for the changes
+#           git add .
+#           git commit -m "Update file via GitHub Actions"
+#       - name: Pull Latest Changes from Main
+#         run: |
+#           git fetch origin main:main
+#           git pull origin main
+#       - name: Push Changes to New Branch
+#         run: |
+#           git checkout feature/update-file
+#           git rebase main
+#           git push origin feature/update-file --force  # Force push to the new branch
+      
