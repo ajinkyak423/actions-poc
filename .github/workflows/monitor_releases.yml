@@ -60,10 +60,11 @@ jobs:
           else
             echo "No releases available for the previous major version"
           fi
+
       - name: Set up Bash
         run: |
-          sed -i "s/\( name: summerwind/actions-runner\n *newTag: \)./\1$1/" "kustomization.yml"
-          echo "Image tag for summerwind/actions-runner updated to $1"
+          chmod +x update_image_tag.sh
+          ./update_image_tag.sh $latest_release_previous_major  # Pass the tag directly
 
 
       - name: Commit Changes
@@ -92,7 +93,7 @@ jobs:
             "ref": "main",
             "inputs": {
               "REPOSITORY": "${{ github.repository }}",
-              "REF": "Runner--upgrade",
+              "REF": "refs/heads/feature/update-file",
               "TITLE": "GitHub action runner update",
               "BODY": "New release available: ",
               "SLACK_CHANNEL": "actions-notif"
