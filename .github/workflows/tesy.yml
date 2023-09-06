@@ -33,25 +33,28 @@ jobs:
           git checkout main
           git pull origin main
 
-      - name: Switch Back to Feature Branch
+      - name: Push Changes to New Branch
         run: |
           git checkout feature/update-file
           git rebase main
           git push origin feature/update-file --force  # Force push to the new branch
 
       - name: Create Pull Request
-        uses: actions/github-script@v5
-        with:
-          script: |
-            const github = require('@actions/github');
-            const octokit = github.getOctokit(process.env.MY_GITHUB_ACTION_TOKEN);
-
-            const newPullRequest = await octokit.pulls.create({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
-              title: 'Automated PR: Update file',
-              head: 'feature/update-file',  // The new branch with changes
-              base: 'main',  // The target branch for the PR (main in this case)
-              body: 'This PR updates the file via GitHub Actions.',
-            });
-            console.log(`Created PR: ${newPullRequest.data.html_url}`);
+        run: |
+          TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
+          REPO="${{ github.repository }}"
+          BASE=main
+          HEAD=feature/update-file
+          TITLE="Automated PR: Update file"
+          BODY="This PR updates the file via GitHub Actions."
+          
+          curl -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"title\": \"$TITLE\",
+              \"body\": \"$BODY\",
+              \"base\": \"$BASE\",
+              \"head\": \"$HEAD\"
+            }" \
+            "https://api.github.com/repos/$REPO/pulls"
