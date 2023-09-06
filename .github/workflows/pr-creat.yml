@@ -3,7 +3,7 @@ name: Create Pull Request
 on:
   push:
     branches:
-      - feature-branch
+      - feature-branch  # Replace with the branch where you want to create a PR
 
 jobs:
   create-pr:
@@ -14,21 +14,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Create Pull Request
-        uses: actions/github-script@v5
+        uses: peter-evans/create-pull-request@v4
         with:
-          script: |
-            const title = "Update file";
-            const body = "This PR updates a file.";
-            const head = "feature-branch"; // Change to the branch where you made changes
-            const base = "main"; // Change to the target branch
-            const { data: pr } = await github.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title,
-              body,
-              head,
-              base,
-            });
-            console.log(`Created PR: ${pr.html_url}`);
-          env:
-            GITHUB_TOKEN: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
+          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
+          title: "Feature: Update file.txt"
+          body: "This PR updates file.txt with the latest changes."
+          branch: feature-branch  # Replace with the branch name where changes were pushed

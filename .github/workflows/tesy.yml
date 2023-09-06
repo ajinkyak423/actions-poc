@@ -1,27 +1,27 @@
-name: Update File
+name: Make Changes
 
 on:
   push:
     branches:
-      - feature-branch
+      - feature-branch  # Replace with the branch where you want to make changes
 
 jobs:
-  update-file:
+  make-changes:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v2
 
-      - name: Make Changes to File
+      - name: Make Changes
         run: |
-          # Make your desired changes to the file here
-          echo "Updated content" > test.txt
+          # Make your desired changes to the file(s) here
+          echo "This is a change" >> file.txt
 
-      - name: Commit Changes
+      - name: Commit and Push Changes
         run: |
-          git config --global user.email "your-email@example.com"
-          git config --global user.name "Your Name"
-          git add test.txt
-          git commit -m "Update file via GitHub Actions"
-          git push origin feature-branch
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Made changes via GitHub Actions"
+          git push
