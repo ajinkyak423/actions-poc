@@ -33,11 +33,11 @@ jobs:
           git checkout main
           git pull origin main
 
-      - name: Push Changes to New Branch
+      - name: Switch Back to Feature Branch
         run: |
           git checkout feature/update-file
           git rebase main
-          git push origin feature/update-file  # Push to the new branch
+          git push origin feature/update-file --force  # Force push to the new branch
 
       - name: Create Pull Request
         uses: actions/github-script@v5
