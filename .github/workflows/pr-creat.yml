@@ -16,7 +16,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
           commit-message: "Automated PR: Update file"
           branch: main  # The branch you want to create the PR against
           title: "Automated PR: Update file"
@@ -24,4 +24,3 @@ jobs:
             This PR updates the file via GitHub Actions.
 
           base: main  # The target branch for the PR
-          files: yourfile.txt  # The path to the updated file
