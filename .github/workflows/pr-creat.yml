@@ -1,22 +1,22 @@
-name: Create Pull Request
+# name: Create Pull Request
 
-on:
-  push:
-    branches:
-      - main  # Replace with the branch where you want to create a PR
+# on:
+#   push:
+#     branches:
+#       - main  # Replace with the branch where you want to create a PR
 
-jobs:
-  create-pr:
-    runs-on: ubuntu-latest
+# jobs:
+#   create-pr:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Check Out Repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Check Out Repository
+#         uses: actions/checkout@v2
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: "Feature: Update file.txt"
-          body: "This PR updates file.txt with the latest changes."
-          branch: main  # This is the target branch for the PR
+#       - name: Create Pull Request
+#         uses: peter-evans/create-pull-request@v4
+#         with:
+#           token: ${{ secrets.GITHUB_TOKEN }}
+#           title: "Feature: Update file.txt"
+#           body: "This PR updates file.txt with the latest changes."
+#           branch: main  # This is the target branch for the PR
