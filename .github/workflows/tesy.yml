@@ -26,6 +26,14 @@ jobs:
           git checkout -b feature/update-file  # Create a new branch for the changes
           git add yourfile.txt
           git commit -m "Update file via GitHub Actions"
+
+      - name: Pull Latest Changes from Main
+        run: |
+          git fetch origin main:main
+          git pull origin main
+
+      - name: Push Changes to New Branch
+        run: |
           git push origin feature/update-file  # Push to the new branch
 
       - name: Create Pull Request
