@@ -16,6 +16,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           title: "Feature: Update file.txt"
           body: "This PR updates file.txt with the latest changes."
+          branch: main  # This is the target branch for the PR
