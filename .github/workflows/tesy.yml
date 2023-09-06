@@ -23,22 +23,23 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          git checkout -b feature/update-file  # Create a new branch for the changes
           git add yourfile.txt
           git commit -m "Update file via GitHub Actions"
-          git push origin main  # Push to the main branch in your repository
+          git push origin feature/update-file  # Push to the new branch
 
       - name: Create Pull Request
         uses: actions/github-script@v5
         with:
           script: |
             const github = require('@actions/github');
-            const octokit = github.getOctokit(process.env.MY_GITHUB_ACTION_TOKEN);
+            const octokit = github.getOctokit(process.env.GITHUB_TOKEN);
 
             const newPullRequest = await octokit.pulls.create({
               owner: github.context.repo.owner,
               repo: github.context.repo.repo,
               title: 'Automated PR: Update file',
-              head: github.context.sha,
+              head: 'feature/update-file',  // The new branch with changes
               base: 'main',  // The target branch for the PR (main in this case)
               body: 'This PR updates the file via GitHub Actions.',
             });
