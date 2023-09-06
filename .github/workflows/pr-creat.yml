@@ -1,26 +1,34 @@
-# name: Create Pull Request
+name: Create Pull Request
 
-# on:
-#   push:
-#     branches:
-#       - main  # This is the branch where updates are made
+on:
+  push:
+    branches:
+      - feature-branch
 
-# jobs:
-#   create-pr:
-#     runs-on: ubuntu-latest
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Check Out Repository
-#         uses: actions/checkout@v2
+    steps:
+      - name: Check Out Repository
+        uses: actions/checkout@v2
 
-#       - name: Create Pull Request
-#         uses: peter-evans/create-pull-request@v3
-#         with:
-#           token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-#           commit-message: "Automated PR: Update file"
-#           branch: feature-branch  # The branch you want to create the PR against
-#           title: "Automated PR: Update file"
-#           body: |
-#             This PR updates the file via GitHub Actions.
-
-#           base: main  # The target branch for the PR (e.g., main)
+      - name: Create Pull Request
+        uses: actions/github-script@v5
+        with:
+          script: |
+            const title = "Update file";
+            const body = "This PR updates a file.";
+            const head = "feature-branch"; // Change to the branch where you made changes
+            const base = "main"; // Change to the target branch
+            const { data: pr } = await github.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body,
+              head,
+              base,
+            });
+            console.log(`Created PR: ${pr.html_url}`);
+          env:
+            GITHUB_TOKEN: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
