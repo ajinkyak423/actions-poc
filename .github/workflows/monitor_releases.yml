@@ -70,9 +70,14 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add kustomization.yml
+          git checkout -b feature/update-file  # Create a new branch for the changes
+          git add .
           git commit -m "Update file via GitHub Actions"
-          git push
+
+      - name: Pull Latest Changes from Main
+        run: |
+          git fetch origin main:main
+          git pull origin main
 
       - name: Create PR and Notify via Github-actions
         # if: steps.take_actions.outputs.notif
