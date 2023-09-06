@@ -57,14 +57,19 @@ jobs:
             echo "No releases available for the previous major version"
           fi
 
-      - name: Set up Bash
+      - name: Update Kustomization File
+        # if: steps.take_actions.outputs.notify == 'true'
         run: |
-          chmod +x update_image_tag.sh
-          if [[ "${{ steps.take_actions.outputs.notify }}" == "true" ]]; then
-            ./update_image_tag.sh $latest_release_previous_major
-          else
-            echo "No need to update the file."
-          fi
+          file_path="kustomization.yml"
+          new_tag="$latest_release_previous_major"
+          sed -i "s| name: summerwind/actions-runner\n *newTag: .*| name: summerwind/actions-runner\n  newTag: $new_tag|" "$file_path"
+          echo "Image tag for summerwind/actions-runner updated to $new_tag"
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b feature/update-file  # Create a new branch for the changes
+          git add .
+          git commit -m "Update file via GitHub Actions"
 
       - name: Create Pull Request
         if: steps.take_actions.outputs.notify == 'true'
