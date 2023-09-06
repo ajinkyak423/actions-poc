@@ -3,7 +3,7 @@ name: Create Pull Request
 on:
   push:
     branches:
-      - main  # You can change this to the branch where updates are made
+      - main  # This is the branch where updates are made
 
 jobs:
   create-pr:
@@ -18,9 +18,9 @@ jobs:
         with:
           token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
           commit-message: "Automated PR: Update file"
-          branch: main  # The branch you want to create the PR against
+          branch: feature-branch  # The branch you want to create the PR against
           title: "Automated PR: Update file"
           body: |
             This PR updates the file via GitHub Actions.
 
-          base: main  # The target branch for the PR
+          base: main  # The target branch for the PR (e.g., main)
