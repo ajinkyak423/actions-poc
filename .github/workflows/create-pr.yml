@@ -85,32 +85,33 @@ jobs:
           }" \
           "https://api.github.com/repos/$REPO/pulls"
 
-    - name: Notify Devops of PR
-      id: slack-notify
-      uses: sonots/slack-notice-action@v3
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-      with:
-        username: GithubActions
-        status: custom
-        payload: |
-            {
-                "channel": "#${{ inputs.SLACK_CHANNEL }}",
-                "text": "New version available \nAutomated Pull Request Created",
-                "blocks": [
-                {
-                    "type": "header",
-                    "text": {
-                    "type": "plain_text",
-                    "text": "New version availabl"
-                    }
-                }
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Pull Request:\n${{ inputs.TITLE }}>"
-                  }
-                }
-              ]
-            }
+    # - name: Notify Devops of PR
+    #   id: slack-notify
+    #   uses: sonots/slack-notice-action@v3
+    #   env:
+    #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    #   with:
+    #     username: GithubActions
+    #     status: custom
+    #     payload: |
+    #         {
+    #             "channel": "#${{ inputs.SLACK_CHANNEL }}",
+    #             "text": "New version available \nAutomated Pull Request Created",
+    #             "blocks": [
+    #             {
+    #                 "type": "header",
+    #                 "text": {
+    #                 "type": "plain_text",
+    #                 "text": "New version availabl"
+    #                 }
+    #             }
+    #             {
+    #               "type": "section",
+    #               "text": {
+    #                 "type": "mrkdwn",
+    #                 "text": "Pull Request:\n${{ inputs.TITLE }}>"
+    #               }
+    #             }
+    #           ]
+    #         }
+            
