@@ -19,6 +19,7 @@ jobs:
         run: |
           latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
           echo "latest_release=$latest_release" >> $GITHUB_ENV
+          echo "latest_release=$latest_release"
 
       - name: Get Latest Release from Previous Major Version
         id: get-latest-release-previous-major
