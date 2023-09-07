@@ -15,7 +15,6 @@ jobs:
 
       - name: Update File
         run: |
-          pip install pyyaml  # Install the PyYAML library
           python update_image_tag.py  # Replace with the actual name of your Python script
 
       - name: Commit Changes
