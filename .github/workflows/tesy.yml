@@ -15,10 +15,8 @@ jobs:
 
       - name: Update File
         run: |
-          # Add your script or command to update the file here
-          # For example, to append some text to a file:
-          chmod +x update_image_tag.sh
-          ./update_image_tag.sh
+          pip install pyyaml  # Install the PyYAML library
+          python update_image_tag.py  # Replace with the actual name of your Python script
 
       - name: Commit Changes
         run: |
