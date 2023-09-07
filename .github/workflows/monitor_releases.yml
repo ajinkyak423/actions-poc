@@ -1,93 +1,93 @@
-name: Monitor Runner Releases
+# name: Monitor Runner Releases
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  monitor-releases:
-    runs-on: ubuntu-latest
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+# jobs:
+#   monitor-releases:
+#     runs-on: ubuntu-latest
+#     env:
+#       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Get Latest Release
-        id: get-latest-release
-        run: |
-          latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
-          echo "latest_release=$latest_release" >> $GITHUB_ENV
+#       - name: Get Latest Release
+#         id: get-latest-release
+#         run: |
+#           latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
+#           echo "latest_release=$latest_release" >> $GITHUB_ENV
 
-      - name: Get Latest Release from Previous Major Version
-        id: get-latest-release-previous-major
-        run: |
-          previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
-          echo "Previous major version: $previous_major_version"
+#       - name: Get Latest Release from Previous Major Version
+#         id: get-latest-release-previous-major
+#         run: |
+#           previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
+#           echo "Previous major version: $previous_major_version"
 
-          # Get all releases from the repository
-          all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
+#           # Get all releases from the repository
+#           all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
 
-          # Filter releases by the previous major version
-          releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
+#           # Filter releases by the previous major version
+#           releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
 
-          # Get the latest release from the previous major version
-          latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
-          echo "latest_release_previous_major=$latest_release_previous_major"
-          echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
+#           # Get the latest release from the previous major version
+#           latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
+#           echo "latest_release_previous_major=$latest_release_previous_major"
+#           echo "latest_release_previous_major=$latest_release_previous_major" >> $GITHUB_ENV
 
-      - name: Compare Versions and Take Action
-        id: take_actions
-        run: |
-          installed_version=$CURRENT_VERSION
-          latest_version_previous_major=$latest_release_previous_major
+#       - name: Compare Versions and Take Action
+#         id: take_actions
+#         run: |
+#           installed_version=$CURRENT_VERSION
+#           latest_version_previous_major=$latest_release_previous_major
 
-          if [ "$latest_version_previous_major" != "" ]; then
-            echo "Latest release from the previous major version: $latest_version_previous_major"
+#           if [ "$latest_version_previous_major" != "" ]; then
+#             echo "Latest release from the previous major version: $latest_version_previous_major"
 
-            if [ "$latest_version_previous_major" != "$installed_version" ]; then
-              echo "New release available: $latest_version_previous_major"
-              echo "::set-output name=notify::true"
-            else
-              echo "No new releases available"
-              echo "::set-output name=notify::false"
-            fi
-          else
-            echo "No releases available for the previous major version"
-          fi
+#             if [ "$latest_version_previous_major" != "$installed_version" ]; then
+#               echo "New release available: $latest_version_previous_major"
+#               echo "::set-output name=notify::true"
+#             else
+#               echo "No new releases available"
+#               echo "::set-output name=notify::false"
+#             fi
+#           else
+#             echo "No releases available for the previous major version"
+#           fi
 
-      - name: Update Kustomization File
-        # if: steps.take_actions.outputs.notify == 'true'
-        run: |
-          file_path="kustomization.yml"
-          new_tag="$latest_release_previous_major"
-          sed -i "s| name: summerwind/actions-runner\n *newTag: .*| name: summerwind/actions-runner\n  newTag: $new_tag|" "$file_path"
-          echo "Image tag for summerwind/actions-runner updated to $new_tag"
+#       - name: Update Kustomization File
+#         # if: steps.take_actions.outputs.notify == 'true'
+#         run: |
+#           file_path="kustomization.yml"
+#           new_tag="$latest_release_previous_major"
+#           sed -i "s| name: summerwind/actions-runner\n *newTag: .*| name: summerwind/actions-runner\n  newTag: $new_tag|" "$file_path"
+#           echo "Image tag for summerwind/actions-runner updated to $new_tag"
 
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git checkout -b feature/update-file  # Create a new branch for the changes
-          git add .
-          git commit -m "Update file via GitHub Actions"
+#           git config --local user.email "action@github.com"
+#           git config --local user.name "GitHub Action"
+#           git checkout -b feature/update-file  # Create a new branch for the changes
+#           git add .
+#           git commit -m "Update file via GitHub Actions"
 
-      - name: Create Pull Request
-        if: steps.take_actions.outputs.notify == 'true'
-        run: |
-          TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
-          REPO="${{ github.repository }}"
-          BASE=main
-          HEAD=feature/update-file
-          TITLE="Automated PR: Update file"
-          BODY="This PR updates the file via GitHub Actions."
+#       - name: Create Pull Request
+#         if: steps.take_actions.outputs.notify == 'true'
+#         run: |
+#           TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
+#           REPO="${{ github.repository }}"
+#           BASE=main
+#           HEAD=feature/update-file
+#           TITLE="Automated PR: Update file"
+#           BODY="This PR updates the file via GitHub Actions."
 
-          curl -X POST \
-            -H "Authorization: token $TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"title\": \"$TITLE\",
-              \"body\": \"$BODY\",
-              \"base\": \"$BASE\",
-              \"head\": \"$HEAD\"
-            }" \
-            "https://api.github.com/repos/$REPO/pulls"
+#           curl -X POST \
+#             -H "Authorization: token $TOKEN" \
+#             -H "Content-Type: application/json" \
+#             -d "{
+#               \"title\": \"$TITLE\",
+#               \"body\": \"$BODY\",
+#               \"base\": \"$BASE\",
+#               \"head\": \"$HEAD\"
+#             }" \
+#             "https://api.github.com/repos/$REPO/pulls"

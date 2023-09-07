@@ -1,32 +1,32 @@
-name: Update Image Tag
+# name: Update Image Tag
 
-on:
-  workflow_dispatch:
-    inputs:
-      newTag:
-        description: 'New tag for the image'
-        required: true
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       newTag:
+#         description: 'New tag for the image'
+#         required: true
 
-jobs:
-  update-image-tag:
-    runs-on: ubuntu-latest
+# jobs:
+#   update-image-tag:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Set up Bash
-        run: |
-          chmod +x update_image_tag.sh
-          ./update_image_tag.sh ${{ github.event.inputs.newTag }}
+#       - name: Set up Bash
+#         run: |
+#           chmod +x update_image_tag.sh
+#           ./update_image_tag.sh ${{ github.event.inputs.newTag }}
 
-      - name: Commit and Push Changes
-        run: |
-          git config user.name "ajinkyak423"
-          git config user.email "ajinkyakumbhar423@gmail.com"
+#       - name: Commit and Push Changes
+#         run: |
+#           git config user.name "ajinkyak423"
+#           git config user.email "ajinkyakumbhar423@gmail.com"
 
-          # Commit changes
-          git commit -am "Update $image_name image tag to ${{ github.event.inputs.newTag }}"
+#           # Commit changes
+#           git commit -am "Update $image_name image tag to ${{ github.event.inputs.newTag }}"
 
-          # Push changes back to the repository
-          git push
+#           # Push changes back to the repository
+#           git push
