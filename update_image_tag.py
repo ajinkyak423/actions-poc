@@ -12,7 +12,7 @@ with open(kustomization_file_path, 'r') as kustomization_file:
 pattern = r"^- name: summerwind/actions-runner[\s\S]*?newTag: .*$"
 
 # Extract the newTag value from the environment variable and format it
-latest_version_previous_major = os.environ.get('latest_version_previous_major')
+latest_version_previous_major = os.environ.get('latest_release_previous_major')
 new_tag_value = f"{latest_version_previous_major}-ubuntu-20.04"
 
 # Replace the newTag value in the image entry with proper indentation
