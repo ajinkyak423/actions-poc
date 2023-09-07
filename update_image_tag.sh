@@ -1,10 +1,8 @@
 #!/bin/bash
 
-# Define the new image version
+# Define the new image tag
 NEW_IMAGE_TAG="v2.305.0-ubuntu-20.04"
 
-# Update the image tag in the Kustomization file and replace the old one
-sed -i "s|name: summerwind/actions-runner.*|name: summerwind/actions-runner\n  newTag: $NEW_IMAGE_TAG|" kustomization.yml
-
-# Remove any lines containing the old image tag
-sed -i "/name: summerwind\/actions-runner.*newTag:/!d" kustomization.yml
+# Update the image tag in the Kustomization file for the specific image name
+IMAGE_NAME="summerwind/actions-runner"
+sed -i "s|name: $IMAGE_NAME\n  newTag: .*|name: $IMAGE_NAME\n  newTag: $NEW_IMAGE_TAG|" kustomization.yml
