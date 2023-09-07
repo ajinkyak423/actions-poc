@@ -123,7 +123,7 @@ jobs:
             "ref": "main",
             "inputs": {
               "REPOSITORY": "${{ github.repository }}",
-              "PR": "${{pr_url}}",
+              "PR": "${{ secrets.pr_url }}",
               "TITLE": "GitHub action runner update",
               "BODY": "New release available: ",
               "SLACK_CHANNEL": "actions-notif"
