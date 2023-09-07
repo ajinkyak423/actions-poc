@@ -101,6 +101,21 @@ jobs:
               \"head\": \"$HEAD\"
             }" \
             "https://api.github.com/repos/$REPO/pulls"
+
+
+          pr_url=$(curl -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"title\": \"$TITLE\",
+              \"body\": \"$BODY\",
+              \"base\": \"$BASE\",
+              \"head\": \"$HEAD\"
+            }" \
+            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
+
+
+          echo "pr_url=$pr_url" >> $GITHUB_ENV
             
       - name: Create PR and Notify via Github-actions
         run: |
