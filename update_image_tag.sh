@@ -1,9 +1,12 @@
 #!/bin/bash
-# Define the new tag value
-newTag="v2.305.0-ubuntu-20.04"
 
-# Define the path to your Kustomization file
-kustomizationFile="kustomization.yml"
+file_path="kustomization.yml"
+image_name="summerwind/actions-runner"
 
-# Use sed to replace the newTag value
-sed -i "s|name: summerwind/actions-runner\n  newTag:.*|name: summerwind/actions-runner\n  newTag: $newTag|" "$kustomizationFile"
+new_tag="v2.305.0-ubuntu-20.04" # The newTag value is passed as the first argument
+
+sed -i "s|\(name: $image_name\n\s*newTag: \).*|\1$new_tag|" "$file_path"
+
+echo "Image tag for $image_name updated to $new_tag"
+
+
