@@ -33,6 +33,10 @@ jobs:
     name: Create Pull Request
 
     steps:
+        - name: Display Workflow Inputs
+          run: |
+            echo '${{ toJSON(github.event.inputs) }}'
+            
         - name: Notify Devops of PR
           id: slack-notify
           uses: sonots/slack-notice-action@v3
