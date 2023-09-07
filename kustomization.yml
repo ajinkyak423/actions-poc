@@ -1,6 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
+images:
+- name: summerwind/actions-runner
+  newTag: v2.305.0-ubuntu-20.04
+- name: us.gcr.io/ridecell-1/ridecell-controllers
+  newTag: 1643797148-bcf06cb2-main
+- name: k8s.gcr.io/autoscaling/cluster-autoscaler
+  newTag: v1.22.1
 kind: Kustomization
-
 labels:
 - includeSelectors: true
   pairs:
@@ -9,42 +15,6 @@ labels:
     ridecell.io/cluster-name: us-support.prod.kops.ridecell.io
     ridecell.io/environment: support
     ridecell.io/region: us
-
-resources:
-- ../../apps/argo-cd/
-- ../../apps/cert-manager/
-- ../../apps/cluster-autoscaler/
-- ../../apps/pod-identity-webhook/
-- ../../apps/traefik/
-- ../../apps/crossplane/
-- ../../apps/external-dns/
-- ../../apps/ridecell-controllers/
-- ../../apps/monitoring/
-- ../../apps/fluent/
-- ../../apps/keda/
-- ../../apps/kubecost/
-- ../../base/rbac/
-- ../../apps/pypicloud/
-- ../../apps/defectdojo/
-- ../../apps/teleport-cluster/
-- ../../apps/grafana/
-- actions-runner-system
-- argo/us-dev-apps.yml
-- argo/us-prod-apps.yml
-- argo/eu-prod-apps.yml
-- argo/us-support-apps.yml
-- argo/cluster-secrets.yml
-- argo/us-prod-infra-app.yml
-- argo/eu-prod-infra-app.yml
-- storage-class.yml
-- traefik/traefik-forward-auth.yml
-- ridecell-controllers/ridecell-controllers.yml
-- support-rds.yml
-- prometheus/prometheus-thanos.yml
-#- notify-aws-events.yaml
-#- yet-another-cloudwatch-exporter/configmap.yml
-
-
 patches:
 - path: argo/ingress.yml
   target:
@@ -91,12 +61,34 @@ patches:
 - path: fluent/fluentd.yml
 - path: fluent/fluent-sumologic-es.patch.yml
 - path: traefik/traefik.yml
-
-
-images:
-- name: summerwind/actions-runner
-  newTag: v2.304.0-ubuntu-20.04
-- name: us.gcr.io/ridecell-1/ridecell-controllers
-  newTag: 1643797148-bcf06cb2-main
-- name: k8s.gcr.io/autoscaling/cluster-autoscaler
-  newTag: v1.22.1
+resources:
+- ../../apps/argo-cd/
+- ../../apps/cert-manager/
+- ../../apps/cluster-autoscaler/
+- ../../apps/pod-identity-webhook/
+- ../../apps/traefik/
+- ../../apps/crossplane/
+- ../../apps/external-dns/
+- ../../apps/ridecell-controllers/
+- ../../apps/monitoring/
+- ../../apps/fluent/
+- ../../apps/keda/
+- ../../apps/kubecost/
+- ../../base/rbac/
+- ../../apps/pypicloud/
+- ../../apps/defectdojo/
+- ../../apps/teleport-cluster/
+- ../../apps/grafana/
+- actions-runner-system
+- argo/us-dev-apps.yml
+- argo/us-prod-apps.yml
+- argo/eu-prod-apps.yml
+- argo/us-support-apps.yml
+- argo/cluster-secrets.yml
+- argo/us-prod-infra-app.yml
+- argo/eu-prod-infra-app.yml
+- storage-class.yml
+- traefik/traefik-forward-auth.yml
+- ridecell-controllers/ridecell-controllers.yml
+- support-rds.yml
+- prometheus/prometheus-thanos.yml
