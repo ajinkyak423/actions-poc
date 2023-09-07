@@ -13,8 +13,8 @@ with open(kustomization_file_path, 'r') as kustomization_file:
 # Define a regular expression pattern to find the image entry
 pattern = r"^- name: summerwind/actions-runner[\s\S]*?newTag: .*$"
 
-# Replace the newTag value in the image entry
-new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n   newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
+# Replace the newTag value in the image entry with proper indentation
+new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n  newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
 
 # Write the updated content back to the file
 with open(kustomization_file_path, 'w') as kustomization_file:
