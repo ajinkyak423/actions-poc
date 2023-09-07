@@ -12,8 +12,8 @@ on:
       REPOSITORY:
         description: 'The Ridecell repository where PR should be created, in the format Ridecell/{repo_name}'
         required: false
-      REF:
-        description: 'The desired branch/tag/sha to merge into main/master'
+      PR:
+        description: 'PR url'
         required: false
       TITLE:
         description: 'Title for the Pull Request'
@@ -50,7 +50,7 @@ jobs:
                         "type": "header",
                         "text": {
                         "type": "plain_text",
-                        "text": "New version available #${{ inputs.SLACK_CHANNEL }}"
+                        "text": "New version available #${{ inputs.PR }}"
                         }
                     }
                     ]
