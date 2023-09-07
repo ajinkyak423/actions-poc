@@ -17,8 +17,8 @@ jobs:
         run: |
           # Add your script or command to update the file here
           # For example, to append some text to a file:
-          chmod +x update_images.sh
-          ./update_images.sh
+          chmod +x update_image_tag.sh
+          ./update_image_tag.sh
 
 
       - name: Commit Changes
