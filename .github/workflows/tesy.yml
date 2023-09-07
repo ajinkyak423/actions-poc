@@ -17,14 +17,16 @@ jobs:
         run: |
           # Add your script or command to update the file here
           # For example, to append some text to a file:
-          echo "New content" >> yourfile.txt
-          
+          chmod +x update_images.sh
+          ./update_images.sh
+
+
       - name: Commit Changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git checkout -b feature/update-file  # Create a new branch for the changes
-          git add yourfile.txt
+          git add .
           git commit -m "Update file via GitHub Actions"
 
       - name: Pull Latest Changes from Main
