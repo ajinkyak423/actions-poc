@@ -14,7 +14,7 @@ with open(kustomization_file_path, 'r') as kustomization_file:
 pattern = r"^- name: summerwind/actions-runner[\s\S]*?newTag: .*$"
 
 # Replace the newTag value in the image entry
-new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n    newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
+new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
 
 # Write the updated content back to the file
 with open(kustomization_file_path, 'w') as kustomization_file:
