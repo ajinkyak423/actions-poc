@@ -1,4 +1,3 @@
-
 import re
 import os
 
@@ -12,8 +11,9 @@ with open(kustomization_file_path, 'r') as kustomization_file:
 # Define a regular expression pattern to find the image entry
 pattern = r"^- name: summerwind/actions-runner[\s\S]*?newTag: .*$"
 
-# Extract the newTag value from the environment variable
-new_tag_value = os.environ.get('latest_release_previous_major')
+# Extract the newTag value from the environment variable and format it
+latest_version_previous_major = os.environ.get('latest_version_previous_major')
+new_tag_value = f"{latest_version_previous_major}-ubuntu-20.04"
 
 # Replace the newTag value in the image entry with proper indentation
 new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n  newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
