@@ -20,7 +20,6 @@ jobs:
           chmod +x update_image_tag.sh
           ./update_image_tag.sh
 
-
       - name: Commit Changes
         run: |
           git config --local user.email "action@github.com"

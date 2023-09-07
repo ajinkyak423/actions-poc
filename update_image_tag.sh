@@ -1,13 +1,10 @@
 #!/bin/bash
 
-file_path="kustomization.yml"
-image_name="summerwind/actions-runner"
-new_tag="v2.305.0-ubuntu-20.04" # The newTag value is passed as the first argument
+# Define the new tag value
+newTag="v2.305.0-ubuntu-20.04"
 
-# Escape special characters in image_name and new_tag
-image_name_escaped=$(sed 's/[[\.*^$/]/\\&/g' <<< "$image_name")
-new_tag_escaped=$(sed 's/[\/&]/\\&/g' <<< "$new_tag")
+# Define the path to your Kustomization file
+kustomizationFile="kustomization.yml"
 
-sed -i "s|\(name: $image_name_escaped\n\s*newTag: \).*|\1$new_tag_escaped|" "$file_path"
-
-echo "Image tag for $image_name updated to $new_tag"
+# Use sed to replace the newTag value
+sed -i "s|name: summerwind/actions-runner\n  newTag:.*|name: summerwind/actions-runner\n  newTag: $newTag|" "$kustomizationFile"
