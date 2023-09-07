@@ -95,7 +95,7 @@ patches:
 
 images:
 - name: summerwind/actions-runner
-  newTag: v2.304.0-ubuntu-20.04
+  newTag: v2.305.0-ubuntu-20.04
 - name: us.gcr.io/ridecell-1/ridecell-controllers
   newTag: 1643797148-bcf06cb2-main
 - name: k8s.gcr.io/autoscaling/cluster-autoscaler
