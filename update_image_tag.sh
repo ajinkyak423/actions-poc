@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Define the new tag value
 newTag="v2.305.0-ubuntu-20.04"
 
