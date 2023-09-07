@@ -1,10 +1,11 @@
 #!/bin/bash
-# Define the new image tag
-NEW_IMAGE_TAG="v2.305.0-ubuntu-20.04"
-# Define the image name you want to update
-IMAGE_NAME="summerwind/actions-runner"
 
-# Update the image tag in the Kustomization file
-sed -i "/- name: $IMAGE_NAME/{n;N;s/\(.*\n.*\)\n\(.*\)/\1\n  newTag: $NEW_IMAGE_TAG/}" kustomization.yml
+# Define the image name and new tag
+image_name="summerwind/actions-runner"
+new_tag="v2.305.0-ubuntu-20.04"
 
+# Define the path to the YAML file
+yaml_file="kustomization.yml"
 
+# Use sed to replace the newTag value
+sed -i "s/\(- name: $image_name\).*\$/\1\n  newTag: $new_tag/" "$yaml_file"
