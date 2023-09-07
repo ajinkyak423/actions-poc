@@ -1,10 +1,12 @@
 #!/bin/bash
 
-# Define the new image tag
-NEW_IMAGE_TAG="v2.305.0-ubuntu-20.04"
+file_path="kustomization.yml"
+image_name="summerwind/actions-runner"
 
-# Define the image name you want to update
-IMAGE_NAME="summerwind/actions-runner"
+new_tag="v2.305.0-ubuntu-20.04" # The newTag value is passed as the first argument
 
-# Update the image tag in the Kustomization file
-sed -i "/- name: $IMAGE_NAME/{N;s/\n  newTag: .*/\n  newTag: $NEW_IMAGE_TAG/}" kustomization.yml
+sed -i "s|\(name: $image_name\n\s*newTag: \).*|\1$new_tag|" "$file_path"
+
+echo "Image tag for $image_name updated to $new_tag"
+
+
