@@ -8,4 +8,4 @@ new_tag="v2.305.0-ubuntu-20.04"
 yaml_file="kustomization.yml"
 
 # Use sed to replace the newTag value using a different delimiter
-sed -i "s#\(name: $image_name\).*\$#\1\n  newTag: $new_tag#" "$yaml_file"
+sed -i "s#\(- name: $image_name\).*\$#\1\n  newTag: $new_tag#" "$yaml_file"
