@@ -41,14 +41,15 @@ jobs:
       - name: Compare Versions and Take Action
         id: take_actions
         run: |
-          installed_version=$CURRENT_VERSION
-          latest_version_previous_major=$latest_release_previous_major
+          CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+          echo "CURRENT_VERSION=$CURRENT_VERSION"
+          cho "CURRENT_VERSION=$CURRENT_VERSION" >> $GITHUB_ENV
 
-          if [ "$latest_version_previous_major" != "" ]; then
-            echo "Latest release from the previous major version: $latest_version_previous_major"
+          if [ "$latest_release_previous_major" != "" ]; then
+            echo "Latest release from the previous major version: $latest_release_previous_major"
 
-            if [ "$latest_version_previous_major" != "$installed_version" ]; then
-              echo "New release available: $latest_version_previous_major"
+            if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
+              echo "New release available: $latest_release_previous_major"
               echo "::set-output name=notify::true"
             else
               echo "No new releases available"
@@ -59,6 +60,7 @@ jobs:
           fi
 
       - name: Update File
+        if: steps.take_actions.outputs.notify
         run: |
           python update_image_tag.py  # Replace with the actual name of your Python script
 
@@ -90,18 +92,6 @@ jobs:
           HEAD=feature/update-file
           TITLE="Automated PR: Update file"
           BODY="This PR updates the file via GitHub Actions."
-          
-          # curl -X POST \
-          #   -H "Authorization: token $TOKEN" \
-          #   -H "Content-Type: application/json" \
-          #   -d "{
-          #     \"title\": \"$TITLE\",
-          #     \"body\": \"$BODY\",
-          #     \"base\": \"$BASE\",
-          #     \"head\": \"$HEAD\"
-          #   }" \
-          #   "https://api.github.com/repos/$REPO/pulls"
-
 
           # Create the pull request and extract the PR URL directly using jq
           pr_url=$(curl -X POST \
