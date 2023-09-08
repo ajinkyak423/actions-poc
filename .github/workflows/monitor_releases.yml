@@ -19,15 +19,12 @@ jobs:
         run: |
           chmod +x ./get_release.sh
           ./get_release.sh
-          CURRENT_VERSION=${CURRENT_VERSION}
-          latest_release=${latest_release}
-          previous_major_version=${previous_major_version}
-          latest_release_previous_major=${latest_release_previous_major}
-
+          # CURRENT_VERSION=${CURRENT_VERSION}
+          # latest_release=${latest_release}
+          # previous_major_version=${previous_major_version}
+          # latest_release_previous_major=${latest_release_previous_major}
           release_data="Current Version: ${CURRENT_VERSION}, Latest Release: ${latest_release}, Previous Major Version: ${previous_major_version}, Latest Release from Previous Major: ${latest_release_previous_major}"
-          echo "release_data=$release_data" >> $GITHUB_ENV
           echo "release_data=$release_data"
-
       - name: Update File
         run: |
           notify=${{steps.release-info.outputs.notify}}
@@ -37,7 +34,6 @@ jobs:
           else
             echo "Notify value: $notify"
           fi
-
       - name: Commit Changes
         run: |
           git config --local user.email "action@github.com"
@@ -45,19 +41,16 @@ jobs:
           git checkout -b Runner-Update  # Create a new branch for the changes
           git add .
           git commit -m "Update file via GitHub Actions"
-
       - name: Pull Latest Changes from Main
         run: |
           git fetch origin main:main
           git checkout main
           git pull origin main
-
       - name: Push Changes to New Branch
         run: |
           git checkout Runner-Update
           git rebase main
           git push origin Runner-Update --force  # Force push to the new branch
-
       - name: Create Pull Request
         run: |
           TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
@@ -66,7 +59,6 @@ jobs:
           HEAD=Runner-Update
           TITLE="Automated PR: Update file"
           BODY="This PR updates the file via GitHub Actions."
-
           # Create the pull request and extract the PR URL directly using jq
           pr_url=$(curl -X POST \
             -H "Authorization: token $TOKEN" \
@@ -78,7 +70,6 @@ jobs:
               \"head\": \"$HEAD\"
             }" \
             "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
-
           # Set the PR URL as an environment variable
           echo "pr_url=$pr_url" >> $GITHUB_ENV
                       
