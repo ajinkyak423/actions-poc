@@ -4,10 +4,13 @@ on:
     inputs:
       REPOSITORY:
         description: 'The Ridecell repository where PR should be created, in the format Ridecell/{repo_name}'
-        required: false
+        required: true
       PR:
         description: 'PR url'
         required: false
+      REF:
+        description: 'The desired branch/tag/sha to merge into main/master'
+        required: true
       TITLE:
         description: 'Title for the Pull Request'
         required: true
@@ -48,6 +51,14 @@ jobs:
                   "text": {
                     "type": "plain_text",
                     "text": "New version available"
+                  }
+                },
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "latest_release=${{ inputs.BODY }}"
+                    
                   }
                 },
                 {
