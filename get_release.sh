@@ -27,7 +27,7 @@ if [ "$latest_release_previous_major" != "" ]; then
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
     echo "New release available: $latest_release_previous_major"
     echo "::set-output name=notify::true"
-    echo "::set-output name=release_data::Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major"
+    echo "release_data='Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major'" >> $GITHUB_ENV
   else
     echo "No new releases available"
     echo "::set-output name=notify::false"
