@@ -19,13 +19,14 @@ jobs:
         run: |
           chmod +x ./get_release.sh
           ./get_release.sh
-          # CURRENT_VERSION=${CURRENT_VERSION}
-          # latest_release=${latest_release}
-          # previous_major_version=${previous_major_version}
-          # latest_release_previous_major=${latest_release_previous_major}
+          CURRENT_VERSION=${CURRENT_VERSION}
+          latest_release=${latest_release}
+          previous_major_version=${previous_major_version}
+          latest_release_previous_major=${latest_release_previous_major}
 
           release_data="Current Version: ${CURRENT_VERSION}, Latest Release: ${latest_release}, Previous Major Version: ${previous_major_version}, Latest Release from Previous Major: ${latest_release_previous_major}"
-
+          echo "release_data=$release_data" >> $GITHUB_ENV
+          echo "release_data=$release_data"
 
       - name: Update File
         run: |
