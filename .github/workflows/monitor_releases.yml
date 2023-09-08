@@ -27,9 +27,11 @@ jobs:
       - name: Update File
         run: |
           notify=${{steps.release-info.outputs.notify}}
-          
           if $notify; then
             python update_image_tag.py  # Replace with the actual name of your Python script
+            release_data=${{steps.release-info.outputs.release_data}}
+            echo "release_data=$release_data"
+            echo "release_data=$release_data" >> $GITHUB_ENV
           else
             echo "Notify value: $notify"
           fi
@@ -71,9 +73,7 @@ jobs:
             "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
           # Set the PR URL as an environment variable
           echo "pr_url=$pr_url" >> $GITHUB_ENV
-          release_data=${{steps.release-info.outputs.release_data}}
-          echo "release_data=$release_data"
-          echo "release_data=$release_data" >> $GITHUB_ENV
+          
                       
       - name: Create PR and Notify via Github-actions
         run: |
