@@ -88,7 +88,7 @@ jobs:
               "REF": "Runner-Update",
               "PR": "'"$pr_url"'",
               "TITLE": "GitHub action runner update",
-              "BODY": "Current Version: "'"$current_version"'"\nLatest Release: "'"$latest_release"'"\nPrevious Major Version: "'"$previous_major_version"'"\nLatest Release from Previous Major: "'"$latest_release_previous_major"'"",
+              "BODY": "Current Version: \"${{ env.current_version }}\"\nLatest Release: \"${{ env.latest_release }}\"\nPrevious Major Version: \"${{ env.previous_major_version }}\"\nLatest Release from Previous Major: \"${{ env.latest_release_previous_major }}\"",
               "SLACK_CHANNEL": "actions-notif"
             }
           }'
