@@ -4,7 +4,7 @@ echo "latest_release=$latest_release"
 
 previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "Previous major version: $previous_major_version"
-echo "Previous major version: $previous_major_version" >> $GITHUB_ENV
+echo "Previous major versio=$previous_major_version" >> $GITHUB_ENV
 
 # Get all releases from the repository
 all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
