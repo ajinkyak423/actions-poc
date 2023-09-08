@@ -4,7 +4,7 @@ echo "latest_release=$latest_release"
 
 previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "Previous major version: $previous_major_version"
-echo "Previous major versio=$previous_major_version" >> $GITHUB_ENV
+echo "Previous major version=$previous_major_version" >> $GITHUB_ENV
 
 # Get all releases from the repository
 all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
@@ -17,7 +17,7 @@ latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].ta
 echo "latest_release_previous_major=$latest_release_previous_major"
 echo "latest_release_previous_major=$latest_release_previous_major" >>$GITHUB_ENV
 
-CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//')
 echo "CURRENT_VERSION=$CURRENT_VERSION"
 echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
 
@@ -27,7 +27,7 @@ if [ "$latest_release_previous_major" != "" ]; then
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
     echo "New release available: $latest_release_previous_major"
     echo "::set-output name=notify::true"
-    echo "::set-output name=release_data::Current Version = ${CURRENT_VERSION}, Latest Release = ${latest_release}, Previous Major Version = ${previous_major_version}, Latest Release from Previous Major = ${latest_release_previous_major}"
+    echo "::set-output name=release_data::Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major"
   else
     echo "No new releases available"
     echo "::set-output name=notify::false"
