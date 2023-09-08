@@ -57,7 +57,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ inputs.BODY }}"
+                    "text": "${{ toJson(inputs.BODY)  }}"
                     
                   }
                 },
