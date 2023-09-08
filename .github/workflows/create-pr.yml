@@ -57,7 +57,7 @@ jobs:
                   "type": "header",
                   "text": {
                     "type": "plain_text",
-                    "text": "latest_release=${{ inputs.BODY }}"
+                    "text": "${{ inputs.BODY }}"
                     
                   }
                 },
