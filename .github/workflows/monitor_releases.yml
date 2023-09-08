@@ -82,7 +82,7 @@ jobs:
               "REF": "Runner-Update",
               "PR": "'"$pr_url"'",
               "TITLE": "GitHub action runner update",
-              "BODY": "'"$release_data"'",
+              "BODY": "$release_data",
               "SLACK_CHANNEL": "actions-notif"
             }
           }'
