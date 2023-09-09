@@ -5,9 +5,6 @@ on:
       REPOSITORY:
         description: 'The Ridecell repository where PR should be created, in the format Ridecell/{repo_name}'
         required: true
-      PR:
-        description: 'PR url'
-        required: false
       REF:
         description: 'The desired branch/tag/sha to merge into main/master'
         required: true
@@ -33,7 +30,38 @@ jobs:
         run: |
           echo '${{ toJSON(github.event.inputs) }}'
 
+      - name: Format inputs for postdata body
+        id: post-body
+        run: |
+          # It seems although input BODY was received in JSON format (e.g. newlines escaped),
+          # the escaped values gets converted. Hence, we need to format it to JSON again for
+          # building our postData body in the next step.
+          
+          echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
+
+      - name: Create Pull Request
+        id: cpr
+        run: |
+          TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
+          REPO="${{ github.repository }}"
+          BASE=main
+          postData='{
+          "title":"${{ inputs.TITLE }}",
+          "body":"${{ steps.post-body.outputs.PR_BODY }}",
+          "head":"${{ inputs.REF }}",
+          "base":"'$BASE'"
+          }'
+          # Create the pull request and extract the PR URL directly using jq
+          pr_url=$(curl -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{postData}" \
+            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
+          # Set the PR URL as an environment variable
+          echo "pr_url=$pr_url" >> $GITHUB_ENV
+
       - name: Notify Devops of PR
+        if: steps.cpr.outputs.pr_url
         id: slack-notify
         uses: sonots/slack-notice-action@v3
         env:
@@ -54,18 +82,10 @@ jobs:
                   }
                 },
                 {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "${{ toJson(inputs.BODY)  }}"
-                    
-                  }
-                },
-                {
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<${{ inputs.PR }}|Click here to view the PR>"
+                    "text": "<${{ steps.cpr.outputs.pr_url }}|Click here to view the PR>"
                   }
                 }
               ]
