@@ -45,12 +45,12 @@ jobs:
           TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
           REPO="${{ github.repository }}"
           BASE=main
-          postData='{
+          postData="{
           "title":"${{ inputs.TITLE }}",
           "body":"${{ steps.post-body.outputs.PR_BODY }}",
           "head":"${{ inputs.REF }}",
           "base":"'$BASE'"
-          }'
+          }"
           # Create the pull request and extract the PR URL directly using jq
           pr_url=$(curl -L \
             -X POST \
@@ -87,6 +87,13 @@ jobs:
                   "text": {
                     "type": "plain_text",
                     "text": "New version available"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{steps.post-body.outputs.PR_BODY}}"
                   }
                 },
                 {
