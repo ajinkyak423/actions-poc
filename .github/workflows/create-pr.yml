@@ -46,12 +46,12 @@ jobs:
           TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
           REPO="${{ github.repository }}"
           BASE=main
-          postData="{
-          "title":"${{ inputs.TITLE }}",
-          "body":"${{ steps.post-body.outputs.PR_BODY }}",
-          "head":"${{ inputs.REF }}",
-          "base":${{steps.post-body.outputs.PR_BODY}}
-          }"
+          postData='{
+            "title":"${{ inputs.TITLE }}",
+            "body":"${{ steps.post-body.outputs.PR_BODY }}",
+            "head":"${{ inputs.REF }}",
+            "base":"main"
+          }'
           # Create the pull request and extract the PR URL directly using jq
           pr_url=$(curl -L \
             -X POST \
@@ -65,9 +65,9 @@ jobs:
           # Set the PR URL as an environment variable
           echo "pr_url=$pr_url" >> $GITHUB_ENV
 
-          echo -e "Response body is:\n$pr_url"
+          # echo -e "Response body is:\n$pr_url"
 
-          status_code=$(echo $pr_url | jq -r '.[1].status_code')
+          # status_code=$(echo $pr_url | jq -r '.[1].status_code')
 
       - name: Notify Devops of PR
         if: steps.cpr.outputs.pr_url
