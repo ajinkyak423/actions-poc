@@ -50,7 +50,7 @@ jobs:
           "title":"${{ inputs.TITLE }}",
           "body":"${{ steps.post-body.outputs.PR_BODY }}",
           "head":"${{ inputs.REF }}",
-          "base":"'$BASE'"
+          "base":${{steps.post-body.outputs.PR_BODY}}
           }"
           # Create the pull request and extract the PR URL directly using jq
           pr_url=$(curl -L \
