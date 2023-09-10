@@ -99,7 +99,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<${{ steps.cpr.outputs.pr_url }}|Click here to view the PR>"
+                    "text": "<$pr_url|Click here to view the PR>"
                   }
                 }
               ]
