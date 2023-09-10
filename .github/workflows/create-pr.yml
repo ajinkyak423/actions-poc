@@ -62,7 +62,7 @@ jobs:
 
           # Set the PR URL as an environment variable
           echo "pr_url=$pr_url"
-          echo "::set-output name=pr_url::$prurl"
+          echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
 
           # echo -e "Response body is:\n$pr_url"
 
