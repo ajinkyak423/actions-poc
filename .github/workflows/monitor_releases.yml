@@ -19,11 +19,11 @@ jobs:
         run: |
           chmod +x ./get_release.sh
           ./get_release.sh
-          # CURRENT_VERSION=${CURRENT_VERSION}
-          # latest_release=${latest_release}
-          # previous_major_version=${previous_major_version}
-          # latest_release_previous_major=${latest_release_previous_major}
-          release_data=${release_data}
+          CURRENT_VERSION=${CURRENT_VERSION}
+          latest_release=${latest_release}
+          previous_major_version=${previous_major_version}
+          latest_release_previous_major=${latest_release_previous_major}
+          # release_data=${release_data}
           
           
       - name: Update File
@@ -82,7 +82,7 @@ jobs:
               "REPOSITORY": "${{ github.repository }}",
               "REF": "Runner-Update",
               "TITLE": "GitHub action runner update",
-              "BODY": "'"$release_data"'",
+              "BODY": "${{steps.release-info.outcome.CURRENT_VERSION}}",
               "SLACK_CHANNEL": "actions-notif"
             }
           }'
