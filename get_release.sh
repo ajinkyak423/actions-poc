@@ -3,8 +3,9 @@ echo "latest_release=$latest_release" >>$GITHUB_ENV
 echo "latest_release=$latest_release"
 
 previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
-echo "Previous major version: $previous_major_version"
 echo "Previous major version=$previous_major_version" >> $GITHUB_ENV
+echo "Previous major version: $previous_major_version"
+
 
 # Get all releases from the repository
 all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
@@ -27,7 +28,7 @@ if [ "$latest_release_previous_major" != "" ]; then
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
     echo "New release available: $latest_release_previous_major"
     echo "::set-output name=notify::true"
-    echo "release_data='Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major'" >> $GITHUB_ENV
+    # echo "release_data='Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major'" >> $GITHUB_ENV
   else
     echo "No new releases available"
     echo "::set-output name=notify::false"
