@@ -51,28 +51,6 @@ jobs:
           git checkout Runner-Update
           git rebase main
           git push origin Runner-Update --force  # Force push to the new branch
-      # - name: Create Pull Request
-      #   run: |
-      #     TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
-      #     REPO="${{ github.repository }}"
-      #     BASE=main
-      #     HEAD=Runner-Update
-      #     TITLE="Automated PR: Update file"
-      #     BODY="This PR updates the file via GitHub Actions."
-      #     # Create the pull request and extract the PR URL directly using jq
-      #     pr_url=$(curl -X POST \
-      #       -H "Authorization: token $TOKEN" \
-      #       -H "Content-Type: application/json" \
-      #       -d "{
-      #         \"title\": \"$TITLE\",
-      #         \"body\": \"$BODY\",
-      #         \"base\": \"$BASE\",
-      #         \"head\": \"$HEAD\"
-      #       }" \
-      #       "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
-      #     # Set the PR URL as an environment variable
-      #     echo "pr_url=$pr_url" >> $GITHUB_ENV
-          
                       
       - name: Create PR and Notify via Github-actions
         run: |
