@@ -61,7 +61,8 @@ jobs:
             "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
 
           # Set the PR URL as an environment variable
-          echo "pr_url=$pr_url" >> $GITHUB_ENV
+          echo "pr_url=$pr_url"
+          echo "::set-output name=pr_url::$prurl"
 
           # echo -e "Response body is:\n$pr_url"
 
@@ -99,7 +100,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "<${{ env.pr_url }}|Click here to view the PR>"
+                    "text": "<${{steps.cpr.outputs.pr_url}}|Click here to view the PR>"
                   }
                 }
               ]
