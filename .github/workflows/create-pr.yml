@@ -38,6 +38,7 @@ jobs:
           # building our postData body in the next step.
           
           echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
+        shell: bash
 
       - name: Create Pull Request
         id: cpr
