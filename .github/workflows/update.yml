@@ -41,7 +41,7 @@ jobs:
           pr_body_json=$(echo "$pr_body" | jq -sR '.' | jq -c '.')
 
           # Store the JSON-formatted PR body as an environment variable
-          echo "::set-env name=PR_BODY_JSON::$pr_body_json"
+          echo "PR_BODY_JSON=$pr_body_json" >> $GITHUB_ENV
 
       - name: Notify about new release
         if: github.event.inputs.DESIRED_VERSION == null
