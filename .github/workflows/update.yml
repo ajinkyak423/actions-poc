@@ -24,12 +24,7 @@ jobs:
         run: |
           chmod +x ./get_release.sh
           ./get_release.sh
-          # CURRENT_VERSION=${CURRENT_VERSION}
-          # latest_release=${latest_release}
-          # previous_major_version=${previous_major_version}
-          # latest_release_previous_major=${latest_release_previous_major}
-          # release_data=${release_data}
-          
+
       - name: Notify about new release
         if: github.event.inputs.DESIRED_VERSION == null
         run: |
@@ -45,10 +40,6 @@ jobs:
                 "SLACK_CHANNEL": "actions-notif"
               }
             }'
-            # Note that postData BODY can be sensitive and may cause workflow to
-            # fail if the content of the changelog includes char sequences that
-            # github actions may interpret as needing substition
-            # (e.g. if dollar-open-brackets-close-brackets sequence is seen)
             curl -X POST \
             -d "${postData}" \
             -H "Accept: application/vnd.github+json" \
@@ -71,9 +62,10 @@ jobs:
         if: github.event.inputs.DESIRED_VERSION
         run: |
           python update_image_tag.py
-          
+
       - name: Commit Changes
         if: github.event.inputs.DESIRED_VERSION
+        id: commit
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -94,9 +86,9 @@ jobs:
           git checkout Runner-Update
           git rebase main
           git push origin Runner-Update --force  # Force push to the new branch
-                
+
       - name: Create PR and Notify via Github-actions
-        if: github.event.inputs.DESIRED_VERSION
+        if: github.event.inputs.DESIRED_VERSION && steps.commit.outcome == 'success'
         run: |
           postData='{
             "ref": "main",
@@ -108,10 +100,6 @@ jobs:
               "SLACK_CHANNEL": "actions-notif"
             }
           }'
-          # Note that postData BODY can be sensitive and may cause workflow to
-          # fail if the content of the changelog includes char sequences that
-          # github actions may interpret as needing substition
-          # (e.g. if dollar-open-brackets-close-brackets sequence is seen)
           curl -X POST \
           -d "${postData}" \
           -H "Accept: application/vnd.github+json" \
