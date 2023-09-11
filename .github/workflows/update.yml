@@ -1,32 +1,111 @@
-# name: Update Image Tag
+name: Monitor Runner Releases
 
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       newTag:
-#         description: 'New tag for the image'
-#         required: true
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      DESIRED_VERSION:
+        description: 'GitHub-Runner version to install'
+        required: false
 
-# jobs:
-#   update-image-tag:
-#     runs-on: ubuntu-latest
+jobs:
+  monitor-releases:
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+      - name: Get Release Information
+        id: release-info
+        run: |
+          chmod +x ./get_release.sh
+          ./get_release.sh
+          # CURRENT_VERSION=${CURRENT_VERSION}
+          # latest_release=${latest_release}
+          # previous_major_version=${previous_major_version}
+          # latest_release_previous_major=${latest_release_previous_major}
+          # release_data=${release_data}
+          
+      - name: Notify about new release
+        run: |
+          notify=${{steps.release-info.outputs.notify}}
+          if $notify; then
+            postData='{
+              "ref": "main",
+              "inputs": {
+                "REPOSITORY": "${{ github.repository }}",
+                "REF": "Runner-Update",
+                "TITLE": "GitHub action runner update",
+                "BODY": "Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}",
+                "SLACK_CHANNEL": "actions-notif"
+              }
+            }'
+            # Note that postData BODY can be sensitive and may cause workflow to
+            # fail if the content of the changelog includes char sequences that
+            # github actions may interpret as needing substition
+            # (e.g. if dollar-open-brackets-close-brackets sequence is seen)
+            curl -X POST \
+            -d "${postData}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
+          else
+            echo "Notify value: $notify"
+          fi
 
-#       - name: Set up Bash
-#         run: |
-#           chmod +x update_image_tag.sh
-#           ./update_image_tag.sh ${{ github.event.inputs.newTag }}
+      - name: Update File
+        if: github.event.inputs.DESIRED_VERSION
+        run: |
+          python update_image_tag.py  # Replace with the actual name of your Python script
+          
+      - name: Commit Changes
+        if: github.event.inputs.DESIRED_VERSION
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git checkout -b Runner-Update  # Create a new branch for the changes
+          git add .
+          git commit -m "Update file via GitHub Actions"
 
-#       - name: Commit and Push Changes
-#         run: |
-#           git config user.name "ajinkyak423"
-#           git config user.email "ajinkyakumbhar423@gmail.com"
+      - name: Pull Latest Changes from Main
+        if: github.event.inputs.DESIRED_VERSION
+        run: |
+          git fetch origin main:main
+          git checkout main
+          git pull origin main
 
-#           # Commit changes
-#           git commit -am "Update $image_name image tag to ${{ github.event.inputs.newTag }}"
-
-#           # Push changes back to the repository
-#           git push
+      - name: Push Changes to New Branch
+        if: github.event.inputs.DESIRED_VERSION
+        run: |
+          git checkout Runner-Update
+          git rebase main
+          git push origin Runner-Update --force  # Force push to the new branch
+                
+      - name: Create PR and Notify via Github-actions
+        if: github.event.inputs.DESIRED_VERSION
+        run: |
+          postData='{
+            "ref": "main",
+            "inputs": {
+              "REPOSITORY": "${{ github.repository }}",
+              "REF": "Runner-Update",
+              "TITLE": "GitHub action runner update",
+              "BODY": "Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}",
+              "SLACK_CHANNEL": "actions-notif"
+            }
+          }'
+          # Note that postData BODY can be sensitive and may cause workflow to
+          # fail if the content of the changelog includes char sequences that
+          # github actions may interpret as needing substition
+          # (e.g. if dollar-open-brackets-close-brackets sequence is seen)
+          curl -X POST \
+          -d "${postData}" \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
+          https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
