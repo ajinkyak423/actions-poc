@@ -40,6 +40,11 @@ jobs:
           echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
         shell: bash
 
+      - name: Debug Info
+        run: |
+          echo "github.event_name: ${{ github.event_name }}"
+          echo "github.event.inputs.DESIRED_VERSION: ${{ github.event.inputs.DESIRED_VERSION }}"
+
       - name: Create Pull Request
         id: cpr
         run: |
