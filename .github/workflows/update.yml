@@ -70,7 +70,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{steps.post-body.outputs.PR_BODY_JSON}}"
+                    "text": "${{ toJSON(steps.post-body.outputs.PR_BODY_JSON)}}"
                   }
                 }
               ]
