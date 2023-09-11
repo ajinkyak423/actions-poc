@@ -3,7 +3,7 @@ echo "latest_release=$latest_release" >>$GITHUB_ENV
 echo "latest_release=$latest_release"
 
 previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
-echo "Previous major version=$previous_major_version" >>$GITHUB_ENV
+echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
 
 
