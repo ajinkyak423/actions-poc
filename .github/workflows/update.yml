@@ -39,8 +39,8 @@ jobs:
           # building our postData body in the next step.
 
           PR_BODY="Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
-          
-          echo PR_BODY=${{ toJSON(${PR_BODY}) }} >>$GITHUB_OUTPUT
+          PR_BODY_JSON = $(echo "${PR_BODY}" | jq -Rs '.')
+          echo "PR_BODY_JSON=${PR_BODY_JSON}" >> $GITHUB_OUTPUT
 
       - name: Notify about new release
         if: github.event.inputs.DESIRED_VERSION == null
@@ -66,7 +66,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{steps.post-body.outputs.PR_BODY}}"
+                    "text": "${{steps.post-body.outputs.PR_BODY_JSON}}"
                   }
                 }
               ]
