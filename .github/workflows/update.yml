@@ -31,7 +31,7 @@ jobs:
           notify=${{steps.release-info.outputs.notify}}
           if $notify; then
             postData='{
-              "ref": "",
+              "ref": "main",
               "inputs": {
                 "REPOSITORY": "${{ github.repository }}",
                 "REF": "Runner-Update",
