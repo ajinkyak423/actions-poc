@@ -64,7 +64,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{steps.format.outputs.pr_body}}"
+                    "text": "${{steps.pr-body.outputs.pr_body}}"
                   }
                 }
               ]
