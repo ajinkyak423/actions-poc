@@ -38,8 +38,12 @@ jobs:
           # the escaped values gets converted. Hence, we need to format it to JSON again for
           # building our postData body in the next step.
 
-          PR_BODY="Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
-          PR_BODY_JSON=$(echo "${PR_BODY}" | jq -Rs '.')
+          PR_BODY_JSON='{
+            "Current Version": "${{ env.CURRENT_VERSION }}",
+            "Latest Release": "${{ env.latest_release }}",
+            "Previous Major Version": "${{ env.previous_major_version }}",
+            "Latest Release from Previous Major": "${{ env.latest_release_previous_major }}"
+          }'
           echo "PR_BODY_JSON=${PR_BODY_JSON}" >> $GITHUB_OUTPUT
 
       - name: Notify about new release
