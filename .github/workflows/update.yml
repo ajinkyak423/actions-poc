@@ -23,6 +23,7 @@ jobs:
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         run: |
           echo "DESIRED_VERSION: ${{ github.event.inputs.DESIRED_VERSION }}"
+          echo "DESIRED_VERSION=${{github.event.inputs.DESIRED_VERSION}}" >>$GITHUB_ENV
 
       - name: Get Release Information
         id: release-info
