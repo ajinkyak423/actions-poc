@@ -1,4 +1,4 @@
-name: Monitor Runner Releases
+name: only Monitor Runner Releases
 
 on:
   push:
