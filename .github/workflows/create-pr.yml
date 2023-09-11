@@ -94,21 +94,13 @@ jobs:
                     "type": "plain_text",
                     "text": "${{steps.post-body.outputs.PR_BODY}}"
                   }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "PR: <${{steps.cpr.outputs.pr_url}}|>"
+                  }
                 }
-                 ${{
-                    if steps.cpr.outputs.pr_url
-                    }}
-                      ,{
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "<${{ steps.cpr.outputs.pr_url }}|Click here to view the PR>"
-                        }
-                      }
-                  {{ else }}
-                    ,{{ }}
-                  {{
-                    end
-                    }}
               ]
             }
