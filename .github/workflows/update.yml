@@ -50,21 +50,21 @@ jobs:
             echo "Notify value: $notify"
           fi
 
-      - name: Check if Manual Dispatch and DESIRED_VERSION provided
-        id: manual-check
-        run: |
-          if [[ ${{ github.event_name }} == 'workflow_dispatch' && -z ${{ github.event.inputs.DESIRED_VERSION }} ]]; then
-            echo "Skipping workflow because DESIRED_VERSION was not provided during manual dispatch."
-            exit 0
-          fi
+      # - name: Check if Manual Dispatch and DESIRED_VERSION provided
+      #   id: manual-check
+      #   run: |
+      #     if [[ ${{ github.event_name }} == 'workflow_dispatch' && -z ${{ github.event.inputs.DESIRED_VERSION }} ]]; then
+      #       echo "Skipping workflow because DESIRED_VERSION was not provided during manual dispatch."
+      #       exit 0
+      #     fi
 
       - name: Update File
-        if: github.event.inputs.DESIRED_VERSION
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION
         run: |
           python update_image_tag.py
 
       - name: Commit Changes
-        if: github.event.inputs.DESIRED_VERSION
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION
         id: commit
         run: |
           git config --local user.email "action@github.com"
@@ -74,21 +74,21 @@ jobs:
           git commit -m "Update file via GitHub Actions"
 
       - name: Pull Latest Changes from Main
-        if: github.event.inputs.DESIRED_VERSION
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION
         run: |
           git fetch origin main:main
           git checkout main
           git pull origin main
 
       - name: Push Changes to New Branch
-        if: github.event.inputs.DESIRED_VERSION
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION
         run: |
           git checkout Runner-Update
           git rebase main
           git push origin Runner-Update --force  # Force push to the new branch
 
       - name: Create PR and Notify via Github-actions
-        if: github.event.inputs.DESIRED_VERSION && steps.commit.outcome == 'success'
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION && steps.commit.outcome == 'success'
         run: |
           postData='{
             "ref": "main",
