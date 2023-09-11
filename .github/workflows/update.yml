@@ -32,17 +32,6 @@ jobs:
           chmod +x ./get_release.sh
           ./get_release.sh
 
-      - name: PR BODY
-        id: pr-body
-        run: |
-          pr_body="Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
-          pr_body=$(echo "$pr_body" | jq -Rs '.')
-          echo pr_body=$pr_body >> $GITHUB_OUTPUT
-          pr_body_json=$(echo "$pr_body" | jq -sR '.' | jq -c '.')
-
-          # Store the JSON-formatted PR body as an environment variable
-          echo "PR_BODY_JSON=$pr_body_json" >> $GITHUB_ENV
-
       - name: Notify about new release
         if: github.event.inputs.DESIRED_VERSION == null
         id: slack-notify-monitor
@@ -68,7 +57,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ env.PR_BODY_JSON }}"
+                    "text": "${{ toJSON('Current Version: ' + env.CURRENT_VERSION + '\nLatest Release: ' + env.latest_release + '\nPrevious Major Version: ' + env.previous_major_version + '\nLatest Release from Previous Major: ' + env.latest_release_previous_major) }}"
                   }
                 }
               ]
