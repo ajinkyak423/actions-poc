@@ -59,6 +59,14 @@ jobs:
             echo "Notify value: $notify"
           fi
 
+      - name: Check if Manual Dispatch and DESIRED_VERSION provided
+        id: manual-check
+        run: |
+          if [[ ${{ github.event_name }} == 'workflow_dispatch' && -z ${{ github.event.inputs.DESIRED_VERSION }} ]]; then
+            echo "Skipping workflow because DESIRED_VERSION was not provided during manual dispatch."
+            exit 0
+          fi
+
       - name: Update File
         if: github.event.inputs.DESIRED_VERSION
         run: |
