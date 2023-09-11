@@ -38,6 +38,10 @@ jobs:
           pr_body="Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
           pr_body=$(echo "$pr_body" | jq -Rs '.')
           echo pr_body=$pr_body >> $GITHUB_OUTPUT
+          pr_body_json=$(echo "$pr_body" | jq -sR '.' | jq -c '.')
+
+          # Store the JSON-formatted PR body as an environment variable
+          echo "::set-env name=PR_BODY_JSON::$pr_body_json"
 
       - name: Notify about new release
         if: github.event.inputs.DESIRED_VERSION == null
@@ -64,11 +68,12 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{steps.pr-body.outputs.pr_body}}"
+                    "text": "${{ env.PR_BODY_JSON }}"
                   }
                 }
               ]
             }
+
 
       - name: Update File
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION
