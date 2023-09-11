@@ -15,6 +15,9 @@ on:
         description: 'Text body for the Pull Request'
         required: false
         default: ''
+      PR:
+        description: 'Text body for the Pull Request'
+        required: false
       SLACK_CHANNEL:
         description: 'Slack channel to be notified of PR creation'
         required: false
@@ -45,6 +48,7 @@ jobs:
           echo "github.event.inputs.DESIRED_VERSION: ${{ github.event.inputs.DESIRED_VERSION }}"
 
       - name: Create Pull Request
+        if: inputs.PR
         id: cpr
         run: |
           TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
