@@ -39,7 +39,7 @@ jobs:
           # building our postData body in the next step.
 
           PR_BODY="Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
-          PR_BODY_JSON = $(echo "${PR_BODY}" | jq -Rs '.')
+          PR_BODY_JSON=$(echo "${PR_BODY}" | jq -Rs '.')
           echo "PR_BODY_JSON=${PR_BODY_JSON}" >> $GITHUB_OUTPUT
 
       - name: Notify about new release
