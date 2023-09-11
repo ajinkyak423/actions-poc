@@ -31,6 +31,7 @@ jobs:
           # release_data=${release_data}
           
       - name: Notify about new release
+        if: github.event.inputs.DESIRED_VERSION == null
         run: |
           notify=${{steps.release-info.outputs.notify}}
           if $notify; then
