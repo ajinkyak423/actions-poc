@@ -1,24 +1,19 @@
 import re
 import os
 
-# Define the path to your Kustomization YAML file
 kustomization_file_path = 'kustomization.yml'
 
-# Read the content of the Kustomization file
 with open(kustomization_file_path, 'r') as kustomization_file:
     file_content = kustomization_file.read()
-
-# Define a regular expression pattern to find the image entry
 pattern = r"^- name: summerwind/actions-runner[\s\S]*?newTag: .*$"
 
-# Extract the newTag value from the environment variable and format it
-latest_version_previous_major = os.environ.get('latest_release_previous_major')
-new_tag_value = f"{latest_version_previous_major}-ubuntu-20.04"
+# latest_version_previous_major = os.environ.get('latest_release_previous_major')
 
-# Replace the newTag value in the image entry with proper indentation
+desired_version = os.environ.get('DESIRED_VERSION')
+
+new_tag_value = f"{DESIRED_VERSION}-ubuntu-20.04"
+
 new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n  newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
-
-# Write the updated content back to the file
 with open(kustomization_file_path, 'w') as kustomization_file:
     kustomization_file.write(new_content)
 
