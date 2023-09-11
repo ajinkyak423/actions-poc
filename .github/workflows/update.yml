@@ -35,7 +35,8 @@ jobs:
       - name: PR BODY
         id: pr-body
         run: |
-          pr_body = toJSON("Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}")
+          pr_body="Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
+          pr_body=$(echo "$pr_body" | jq -Rs '.')
           echo pr_body=$pr_body >> $GITHUB_OUTPUT
 
       - name: Notify about new release
