@@ -63,8 +63,6 @@ jobs:
           echo "pr_url=$pr_url"
           echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
 
-          # echo -e "Response body is:\n$pr_url"
-
           # status_code=$(echo $pr_url | jq -r '.[1].status_code')
 
       - name: Notify Devops of PR
@@ -99,7 +97,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "PR: <${{steps.cpr.outputs.pr_url}}|>"
+                    "text": "PR: <${{steps.cpr.outputs.pr_url}}>"
                   }
                 }
               ]
