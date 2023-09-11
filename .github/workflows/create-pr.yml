@@ -39,35 +39,35 @@ jobs:
           
           echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
 
-      # - name: Debug Info
-      #   run: |
-      #     echo "github.event_name: ${{ github.event_name }}"
-      #     echo "github.event.inputs.DESIRED_VERSION: ${{ github.event.inputs.DESIRED_VERSION }}"
+      - name: Debug Info
+        run: |
+          echo "github.event_name: ${{ github.event_name }}"
+          echo "github.event.inputs.DESIRED_VERSION: ${{ github.event.inputs.DESIRED_VERSION }}"
 
-      # - name: Create Pull Request
-      #   id: cpr
-      #   run: |
-      #     TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
-      #     REPO="${{ github.repository }}"
-      #     BASE=main
-      #     postData='{
-      #       "title":"${{ inputs.TITLE }}",
-      #       "body":"${{ steps.post-body.outputs.PR_BODY }}",
-      #       "head":"${{ inputs.REF }}",
-      #       "base":"main"
-      #     }'
-      #     # Create the pull request and extract the PR URL directly using jq
-      #     pr_url=$(curl -X POST \
-      #       -H "Authorization: token $TOKEN" \
-      #       -H "Accept: application/json" \
-      #       -d "${postData}" \
-      #       "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
+      - name: Create Pull Request
+        id: cpr
+        run: |
+          TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
+          REPO="${{ github.repository }}"
+          BASE=main
+          postData='{
+            "title":"${{ inputs.TITLE }}",
+            "body":"${{ steps.post-body.outputs.PR_BODY }}",
+            "head":"${{ inputs.REF }}",
+            "base":"main"
+          }'
+          # Create the pull request and extract the PR URL directly using jq
+          pr_url=$(curl -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/json" \
+            -d "${postData}" \
+            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
 
-      #     # Set the PR URL as an environment variable
-      #     echo "pr_url=$pr_url"
-      #     echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
+          # Set the PR URL as an environment variable
+          echo "pr_url=$pr_url"
+          echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
 
-      #     # status_code=$(echo $pr_url | jq -r '.[1].status_code')
+          # status_code=$(echo $pr_url | jq -r '.[1].status_code')
 
       - name: Notify Devops of PR
         # if: steps.cpr.outputs.pr_url
