@@ -57,11 +57,6 @@ jobs:
             echo "Notify value: $notify"
           fi
 
-      - name: Debug Info
-        run: |
-          echo "github.event_name: ${{ github.event_name }}"
-          echo "github.event.inputs.DESIRED_VERSION: ${{ github.event.inputs.DESIRED_VERSION }}"
-
       - name: Update File
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.DESIRED_VERSION
         run: |
