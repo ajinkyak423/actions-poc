@@ -94,11 +94,11 @@ jobs:
                     "type": "plain_text",
                     "text": "${{steps.post-body.outputs.PR_BODY}}"
                   }
-                },
+                }
                  ${{
                     if steps.cpr.outputs.pr_url
                     }}
-                      {
+                      ,{
                         "type": "section",
                         "text": {
                           "type": "mrkdwn",
@@ -106,7 +106,7 @@ jobs:
                         }
                       }
                   {{ else }}
-                    {{ }}
+                    ,{{ }}
                   {{
                     end
                     }}
