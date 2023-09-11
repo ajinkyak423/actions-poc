@@ -95,16 +95,20 @@ jobs:
                     "text": "${{steps.post-body.outputs.PR_BODY}}"
                   }
                 },
-                 ${{ if steps.cpr.outputs.pr_url }}
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "<${{ steps.cpr.outputs.pr_url }}|Click here to view the PR>"
-                    }
-                  }
-                {{ else }}
-                  {{ }}
-                {{end}}
+                 ${{
+                    if steps.cpr.outputs.pr_url
+                    }}
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "<${{ steps.cpr.outputs.pr_url }}|Click here to view the PR>"
+                        }
+                      }
+                  {{ else }}
+                    {{ }}
+                  {{
+                    end
+                    }}
               ]
             }
