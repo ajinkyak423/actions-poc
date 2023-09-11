@@ -11,7 +11,7 @@ pattern = r"^- name: summerwind/actions-runner[\s\S]*?newTag: .*$"
 
 desired_version = os.environ.get('DESIRED_VERSION')
 
-new_tag_value = f"{DESIRED_VERSION}-ubuntu-20.04"
+new_tag_value = f"{desired_version}-ubuntu-20.04"
 
 new_content = re.sub(pattern, f"- name: summerwind/actions-runner\n  newTag: {new_tag_value}", file_content, flags=re.MULTILINE)
 with open(kustomization_file_path, 'w') as kustomization_file:

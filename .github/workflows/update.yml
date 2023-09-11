@@ -62,7 +62,7 @@ jobs:
       - name: Update File
         if: github.event.inputs.DESIRED_VERSION
         run: |
-          python update_image_tag.py  # Replace with the actual name of your Python script
+          python update_image_tag.py
           
       - name: Commit Changes
         if: github.event.inputs.DESIRED_VERSION
