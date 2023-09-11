@@ -41,7 +41,7 @@ jobs:
         with:
           username: GithubActions
           status: custom
-          payload: |
+          payload: >
             {
               "channel": "#actions-notif",
               "text": "New version available",
@@ -57,15 +57,12 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": |
-                      Current Version: ${{ env.CURRENT_VERSION }}
-                      Latest Release: ${{ env.latest_release }}
-                      Previous Major Version: ${{ env.previous_major_version }}
-                      Latest Release from Previous Major: ${{ env.latest_release_previous_major }}
+                    "text": "Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}"
                   }
                 }
               ]
             }
+
 
 
       - name: Update File
