@@ -7,13 +7,10 @@ echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
 
 
-# Get all releases from the repository
 all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
 
-# Filter releases by the previous major version
 releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
 
-# Get the latest release from the previous major version
 latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
 echo "latest_release_previous_major=$latest_release_previous_major"
 echo "latest_release_previous_major=$latest_release_previous_major" >>$GITHUB_ENV
