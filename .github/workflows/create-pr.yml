@@ -65,13 +65,35 @@ jobs:
             -H "Authorization: token $TOKEN" \
             -H "Accept: application/json" \
             -d "${postData}" \
-            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
+            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url'\
+             -w '{"status_code": "%{http_code}"}' | jq -s )
 
           # Set the PR URL as an environment variable
           echo "pr_url=$pr_url"
           echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
 
-          # status_code=$(echo $pr_url | jq -r '.[1].status_code')
+          status_code=$(echo $pr_url | jq -r '.[1].status_code')
+          if [ $status_code == '422' ]
+          then
+            # get reason for PR not being created.
+            # (Two jq commands since errors is an array holding json)
+            reason=$(echo $pr_url | jq -r '.[0].errors' | jq -r '.[0].message')
+            echo "$reason"
+            if [[ $reason =~ 'pull request already exists' ]]
+            then
+              echo "Workflow will not recreate or replace the pull request"
+            else
+              exit 1
+            fi
+          elif [ $status_code == '201' ]
+          then
+            # save pull request url for notification step
+            PR_URL=$(echo $pr_url | jq -r ".[0].html_url")
+            echo "pullreq_url=$PR_URL" >> $GITHUB_OUTPUT
+          else
+            echo "Unexpected status code $status_code in create PR API call. Exiting."
+            exit 1
+          fi
 
       - name: Notify Devops of PR
         # if: steps.cpr.outputs.pr_url
