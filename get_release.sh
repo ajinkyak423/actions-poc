@@ -34,7 +34,9 @@ echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
 
 # Calculate the date difference in days using 'date' command
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
+echo "latest_release_date_formatted: $latest_release_date_formatted"
 latest_release_previous_major_date_formatted=$(date -d "$latest_release_previous_major_date" '+%Y-%m-%d')
+echo "latest_release_previous_major_date_formatted: $latest_release_previous_major_date_formatted"
 
 # date_diff=$(($(latest_release_date_formatted) - $(latest_release_previous_major_date_formatted)))
 # echo "date_diff=$date_diff"
