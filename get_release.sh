@@ -7,6 +7,10 @@ latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/la
 echo "latest_release=$latest_release" >>$GITHUB_ENV
 echo "latest_release=$latest_release"
 
+latest_release_date=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.published_at')
+echo "latest_release_date=$latest_release_date" >> $GITHUB_ENV
+echo "latest_release_date=$latest_release_date"
+
 previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
