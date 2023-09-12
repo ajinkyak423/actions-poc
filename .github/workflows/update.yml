@@ -26,7 +26,6 @@ jobs:
         run: |
           notify=${{steps.release-info.outputs.notify}}
           if $notify; then
-
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
             git checkout -b Runner-Update  # Create a new branch for the changes
@@ -40,7 +39,9 @@ jobs:
             git checkout Runner-Update
             git rebase main
             git push origin Runner-Update --force  # Force push to the new branch
-
+          else
+            echo "Notify value: $notify"
+          fi
 
 
       # - name: Update File
