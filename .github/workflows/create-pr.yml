@@ -15,9 +15,6 @@ on:
         description: 'Text body for the Pull Request'
         required: false
         default: ''
-      PR:
-        description: 'Text body for the Pull Request'
-        required: false
       SLACK_CHANNEL:
         description: 'Slack channel to be notified of PR creation'
         required: false
