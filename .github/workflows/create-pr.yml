@@ -45,7 +45,6 @@ jobs:
           echo "github.event.inputs.DESIRED_VERSION: ${{ inputs.PR}}"
 
       - name: Create Pull Request
-        if: inputs.PR
         id: cpr
         run: |
           TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
@@ -71,7 +70,6 @@ jobs:
           # status_code=$(echo $pr_url | jq -r '.[1].status_code')
 
       - name: Notify Devops of PR
-        # if: steps.cpr.outputs.pr_url
         id: slack-notify
         uses: sonots/slack-notice-action@v3
         env:
