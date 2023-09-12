@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yaml_file="kustomization.yml"
+yaml_file="$GITHUB_WORKSPACE/kustomization.yml"
 echo $yaml_file
 
 latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
@@ -32,7 +32,7 @@ if [ "$latest_release_previous_major" != "" ]; then
     echo "extracted_version: ${extracted_version}"
     new_tag_value="${latest_release_previous_major}-ubuntu-20.04"
     echo "new_tag_value: ${new_tag_value}"
-    sed -i '' "s/\(newTag: \)$extracted_version/\1$new_tag_value/g" "$yaml_file"
+    sed -i "s/\(newTag: \)$extracted_version/\1$new_tag_value/g" "$yaml_file"
     echo "::set-output name=notify::true"
 
     # echo "release_data='Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major'" >> $GITHUB_ENV
