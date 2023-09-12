@@ -42,7 +42,7 @@ jobs:
       - name: Debug Info
         run: |
           echo "github.event_name: ${{ github.event_name }}"
-          echo "github.event.inputs.DESIRED_VERSION: ${{ inputs.PR}}"
+          echo "github.event.inputs.DESIRED_VERSION: ${{ inputs.PR }}"
 
       - name: Create Pull Request
         id: cpr
