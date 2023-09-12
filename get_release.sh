@@ -28,7 +28,7 @@ if [ "$latest_release_previous_major" != "" ]; then
   echo "Latest release from the previous major version: $latest_release_previous_major"
 
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
-    extracted_version=$(echo "$current_tag_value" | cut -d'-' -f1)
+    extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
     echo "extracted_version: ${extracted_version}"
     new_tag_value="${latest_release_previous_major}-ubuntu-20.04"
     echo "new_tag_value: ${new_tag_value}"
