@@ -35,7 +35,7 @@ echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
 
 echo "latest_release_date=$(date -d "$latest_release_date" '+%s')"
 echo "latest_release_previous_major_date=$(date -d "$latest_release_previous_major_date" '+%s')"
-date_diff=$(($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s'))
+date_diff=$(($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s')))
 echo "date_diff=$date_diff"
 
 if [ "$latest_release_previous_major" != "" ]; then
