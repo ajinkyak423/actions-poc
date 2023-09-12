@@ -32,14 +32,14 @@ CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.y
 echo "CURRENT_VERSION=$CURRENT_VERSION"
 echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
 
-# Calculate the date difference in days using 'date' command
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
 latest_release_previous_major_date_formatted=$(date -d "$latest_release_previous_major_date" '+%Y-%m-%d')
 echo "latest_release_previous_major_date_formatted: $latest_release_previous_major_date_formatted"
 
-# date_diff=$(($(latest_release_date_formatted) - $(latest_release_previous_major_date_formatted)))
-# echo "date_diff=$date_diff"
+date_diff=$(( ($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s')) / 86400 ))
+
+echo "date_diff=$date_diff"
 
 if [ "$latest_release_previous_major" != "" ]; then
   echo "Latest release from the previous major version: $latest_release_previous_major"
