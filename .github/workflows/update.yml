@@ -22,7 +22,6 @@ jobs:
           ./get_release.sh
 
       - name: Notify
-        if: ${{steps.release-info.outputs.notify}} == true
         id: notify
         run: |
           notify=${{steps.release-info.outputs.notify}}
@@ -46,7 +45,7 @@ jobs:
 
 
       - name: Create PR and Notify via Github-actions
-        if: ${{steps.release-info.outputs.notify}} == true
+        if: ${{steps.release-info.outputs.notify}} != false
         run: |
           postData='{
             "ref": "main",
