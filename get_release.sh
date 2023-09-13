@@ -9,9 +9,9 @@ echo "latest_release=$latest_release"
 
 latest_release_date=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.published_at')
 echo "latest_release_date=$latest_release_date" >> $GITHUB_ENV
-echo "latest_release_date=$latest_release_date"
+# echo "latest_release_date=$latest_release_date"
 
-previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-2}')
+previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
 
@@ -25,7 +25,7 @@ echo "latest_release_previous_major=$latest_release_previous_major"
 echo "latest_release_previous_major=$latest_release_previous_major" >>$GITHUB_ENV
 
 latest_release_previous_major_date=$(echo "$releases_previous_major" | jq -r '.[0].published_at')
-echo "latest_release_previous_major_date=$latest_release_previous_major_date"
+# echo "latest_release_previous_major_date=$latest_release_previous_major_date"
 echo "latest_release_previous_major_date=$latest_release_previous_major_date" >> $GITHUB_ENV
 
 CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//')
@@ -34,6 +34,7 @@ echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
 
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
+
 latest_release_previous_major_date_formatted=$(date -d "$latest_release_previous_major_date" '+%Y-%m-%d')
 echo "latest_release_previous_major_date_formatted: $latest_release_previous_major_date_formatted"
 
