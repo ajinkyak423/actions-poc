@@ -43,15 +43,17 @@ echo "date_diff=$date_diff"
 
 if [ "$latest_release_previous_major" != "" ]; then
   echo "Latest release from the previous major version: $latest_release_previous_major"
-
+  extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
+  echo "extracted_version: ${extracted_version}"
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
-    extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
-    echo "extracted_version: ${extracted_version}"
-    new_tag_value="${latest_release_previous_major}"
+    if ["$date_diff" >= 30 ]; then
+      new_tag_value="${latest_release}"
+    else
+      new_tag_value="${latest_release_previous_major}"
+    fi
     echo "new_tag_value: ${new_tag_value}"
     sed -i "s/\(newTag: \)$extracted_version/\1$new_tag_value/g" "$yaml_file"
     echo "::set-output name=notify::true"
-
     # echo "release_data='Current Version: $CURRENT_VERSION, Latest Release: $latest_release, Previous Major Version: $previous_major_version, Latest Release from Previous Major: $latest_release_previous_major'" >> $GITHUB_ENV
   else
     echo "No new releases available"
