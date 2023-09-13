@@ -41,12 +41,14 @@ date_diff=$(( ($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_rele
 
 echo "date_diff=$date_diff"
 
+expected_date_diff=30
+
 if [ "$latest_release_previous_major" != "" ]; then
   echo "Latest release from the previous major version: $latest_release_previous_major"
   extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
   echo "extracted_version: ${extracted_version}"
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
-    if [ "$date_diff" >= "30" ]; then
+    if [ "$date_diff" -ge "$expected_date_diff" ]; then
       new_tag_value="${latest_release}"
     else
       new_tag_value="${latest_release_previous_major}"
