@@ -49,7 +49,7 @@ if [ "$latest_release_previous_major" != "" ]; then
   echo "extracted_version: ${extracted_version}"
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
     if [ "$date_diff" -ge "$expected_date_diff" ]; then
-      echo "Upgrade timeframe is over for previous major version\n Upgradding to latest version"
+      echo "Upgrade timeframe is over for previous major version. Upgradding to latest version"
       new_tag_value="${latest_release}"
     else
       new_tag_value="${latest_release_previous_major}"
