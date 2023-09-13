@@ -32,6 +32,9 @@ CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.y
 echo "CURRENT_VERSION=$CURRENT_VERSION"
 echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
 
+extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
+echo "extracted_version: ${extracted_version}"
+
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
 
@@ -46,9 +49,8 @@ expected_date_diff=30
 
 if [ "$latest_release_previous_major" != "" ]; then
   echo "Latest release from the previous major version: $latest_release_previous_major"
-  extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
-  echo "extracted_version: ${extracted_version}"
-  if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
+  
+  if [ "$latest_release_previous_major" != "$extracted_version" ]; then
     if [ "$date_diff" -ge "$expected_date_diff" ]; then
       echo "Upgrade timeframe is over for previous major version. Upgradding to latest version"
       new_tag_value="${latest_release}"
