@@ -20,11 +20,11 @@ all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
 
 releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
 
-latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
+latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[1].tag_name')
 echo "latest_release_previous_major=$latest_release_previous_major"
 echo "latest_release_previous_major=$latest_release_previous_major" >>$GITHUB_ENV
 
-latest_release_previous_major_date=$(echo "$releases_previous_major" | jq -r '.[0].published_at')
+latest_release_previous_major_date=$(echo "$releases_previous_major" | jq -r '.[1].published_at')
 echo "latest_release_previous_major_date=$latest_release_previous_major_date"
 echo "latest_release_previous_major_date=$latest_release_previous_major_date" >> $GITHUB_ENV
 
