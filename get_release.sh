@@ -46,7 +46,7 @@ if [ "$latest_release_previous_major" != "" ]; then
   extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
   echo "extracted_version: ${extracted_version}"
   if [ "$latest_release_previous_major" != "$CURRENT_VERSION" ]; then
-    if [$date_diff -ge 30 ]; then
+    if [ "$date_diff" >= 30 ]; then
       new_tag_value="${latest_release}"
     else
       new_tag_value="${latest_release_previous_major}"
