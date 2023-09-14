@@ -29,6 +29,9 @@ jobs:
           chmod +x ./runner-info-and-update.sh
           ./runner-info-and-update.sh
 
+          cat $GITHUB_WORKSPACE/kustomization.yml
+
+
           if git diff HEAD -- $GITHUB_WORKSPACE/kustomization.yml; then
             echo "Kustomization file unchanged, skipping subsequent steps"
             echo "KUSTOMIZATION_CHANGED=false" >> $GITHUB_ENV
