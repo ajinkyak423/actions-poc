@@ -37,6 +37,18 @@ jobs:
             echo "KUSTOMIZATION_CHANGED=true" >> $GITHUB_ENV
           fi
 
+      - name: Debug Kustomization
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la $GITHUB_WORKSPACE
+        if: always()
+
+      - name: Debug Kustomization Changed
+        run: |
+          echo "KUSTOMIZATION_CHANGED: ${{ env.KUSTOMIZATION_CHANGED }}"
+        if: always()
+
+
       # - name: Notify
       #   id: notify
       #   run: |
