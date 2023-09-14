@@ -29,6 +29,14 @@ jobs:
           chmod +x ./runner-info-and-update.sh
           ./runner-info-and-update.sh
 
+          if git diff --quiet HEAD -- kustomization.yaml; then
+            echo "Kustomization file unchanged, skipping subsequent steps"
+            echo "KUSTOMIZATION_CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "Kustomization file changed, proceeding with subsequent steps"
+            echo "KUSTOMIZATION_CHANGED=true" >> $GITHUB_ENV
+          fi
+
       # - name: Notify
       #   id: notify
       #   run: |
@@ -75,13 +83,13 @@ jobs:
       - name: Create PR and Notify via Github-actions
         id: notify
         run: |
-          notify=${{steps.release-info.outputs.notify}}
-          if $notify; then
+          kustomization_changed=${{ env.KUSTOMIZATION_CHANGED }}
+          if $kustomization_changed == "true"; then
             git checkout -B Runner-Update_${{ env.new_tag_value }}  # Create a new branch for the changes
             git config user.email "418982+github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
             echo "Adding files"
-            git add .
+            git add kustomization.yaml
             git -c author.name=${{ github.actor }} -c author.email=${{ github.actor }}@users.noreply.github.com commit -m "Runner version update to ${{ env.new_tag_value }}"
 
             git push --force --set-upstream origin Runner-Update_${{ env.new_tag_value }}   # Force push to the new branch
@@ -104,5 +112,5 @@ jobs:
             https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
 
           else
-            echo "Notify value: $notify"
+            echo "New version is not available."
           fi
