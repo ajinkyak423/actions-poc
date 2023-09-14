@@ -31,13 +31,13 @@ jobs:
 
           cat $GITHUB_WORKSPACE/kustomization.yml
 
-
-          if git diff HEAD -- $GITHUB_WORKSPACE/kustomization.yml; then
-            echo "Kustomization file changed, proceeding with subsequent steps"
-            echo "KUSTOMIZATION_CHANGED=true" >> $GITHUB_ENV
-          else
+        
+          if git diff --exit-code kustomization.yml; then
             echo "Kustomization file unchanged, skipping subsequent steps"
             echo "KUSTOMIZATION_CHANGED=false" >> $GITHUB_ENV
+          else
+            echo "Kustomization file changed, proceeding with subsequent steps"
+            echo "KUSTOMIZATION_CHANGED=true" >> $GITHUB_ENV
           fi
 
       - name: Debug Kustomization
