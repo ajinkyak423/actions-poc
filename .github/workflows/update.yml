@@ -29,7 +29,7 @@ jobs:
           chmod +x ./runner-info-and-update.sh
           ./runner-info-and-update.sh
 
-          # cat $GITHUB_WORKSPACE/kustomization.yml
+          cat $GITHUB_WORKSPACE/kustomization.yml
 
 
           if git diff HEAD -- kustomization.yml; then
