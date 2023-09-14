@@ -32,7 +32,7 @@ jobs:
           # cat $GITHUB_WORKSPACE/kustomization.yml
 
 
-          if git diff HEAD -- $GITHUB_WORKSPACE/kustomization.yml; then
+          if git diff HEAD -- kustomization.yml; then
             echo "Kustomization file changed, proceeding with subsequent steps"
             echo "KUSTOMIZATION_CHANGED=true" >> $GITHUB_ENV
           else
