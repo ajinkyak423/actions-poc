@@ -26,7 +26,7 @@ jobs:
         id: release-info
         run: |
           sudo cp github-actions/devops/runner-update/runner-info-and-update.sh ./runner-info-and-update.sh
-          chmod +x ./get_release.sh
+          chmod +x ./runner-info-and-update.sh
           ./runner-info-and-update.sh
 
       # - name: Notify
