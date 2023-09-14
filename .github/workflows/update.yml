@@ -103,7 +103,7 @@ jobs:
             git config user.email "418982+github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
             echo "Adding files"
-            git add $GITHUB_WORKSPACE/kustomization.yml
+            git add kustomization.yml
             git -c author.name=${{ github.actor }} -c author.email=${{ github.actor }}@users.noreply.github.com commit -m "Runner version update to ${{ env.new_tag_value }}"
 
             git push --force --set-upstream origin Runner-Update_${{ env.new_tag_value }}   # Force push to the new branch
