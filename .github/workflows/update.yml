@@ -1,4 +1,3 @@
-
 name: only Monitor Runner Releases
 
 on:
@@ -15,37 +14,84 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: ajinkyak423/temp
+          ref: runner-update
+          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
+          path: github-actions
+
       - name: Get Release Information
         id: release-info
         run: |
+          sudo cp github-actions/devops/runner-update/runner-info-and-update.sh ./runner-info-and-update.sh
           chmod +x ./get_release.sh
-          ./get_release.sh
+          ./runner-info-and-update.sh
+
+      # - name: Notify
+      #   id: notify
+      #   run: |
+      #     notify=${{steps.release-info.outputs.notify}}
+      #     if $notify; then
+      #       git config --local user.email "action@github.com"
+      #       git config --local user.name "GitHub Action"
+      #       git checkout -b Runner-Update  # Create a new branch for the changes
+      #       git add .
+      #       git commit -m "Update file via GitHub Actions"
+
+      #       git fetch origin main:main
+      #       git checkout main
+      #       git pull origin main
+
+      #       git checkout Runner-Update
+      #       git rebase main
+      #       git push origin Runner-Update --force  # Force push to the new branch
+      #     else
+      #       echo "Notify value: $notify"
+      #     fi
+
+
+      # - name: Create PR and Notify via Github-actions
+      #   if: ${{steps.release-info.outputs.notify}}
+      #   run: |
+      #     postData='{
+      #       "ref": "main",
+      #       "inputs": {
+      #         "REPOSITORY": "${{ github.repository }}",
+      #         "REF": "Runner-Update",
+      #         "TITLE": "GitHub action runner update",
+      #         "BODY": "Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}",
+      #         "SLACK_CHANNEL": "actions-notif"
+      #       }
+      #     }'
+      #     curl -X POST \
+      #     -d "${postData}" \
+      #     -H "Accept: application/vnd.github+json" \
+      #     -H "Authorization: Bearer ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
+      #     -H "X-GitHub-Api-Version: 2022-11-28" \
+      #     https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
 
       - name: Create PR and Notify via Github-actions
         id: notify
         run: |
           notify=${{steps.release-info.outputs.notify}}
           if $notify; then
-            git config --local user.email "action@github.com"
-            git config --local user.name "GitHub Action"
-            git checkout -b Runner-Update  # Create a new branch for the changes
+            git checkout -B Runner-Update_${{ env.new_tag_value }}  # Create a new branch for the changes
+            git config user.email "418982+github-actions[bot]@users.noreply.github.com"
+            git config user.name "github-actions[bot]"
+            echo "Adding files"
             git add .
-            git commit -m "Update file via GitHub Actions"
+            git -c author.name=${{ github.actor }} -c author.email=${{ github.actor }}@users.noreply.github.com commit -m "Runner version update to ${{ env.new_tag_value }}"
 
-            git fetch origin main:main
-            git checkout main
-            git pull origin main
-
-            git checkout Runner-Update
-            git rebase main
-            git push origin Runner-Update --force  # Force push to the new branch
+            git push --force --set-upstream origin Runner-Update_${{ env.new_tag_value }}   # Force push to the new branch
 
             postData='{
               "ref": "main",
               "inputs": {
                 "REPOSITORY": "${{ github.repository }}",
-                "REF": "Runner-Update",
-                "TITLE": "GitHub action runner update",
+                "REF": "Runner-Update_${{ env.new_tag_value }}",
+                "TITLE": "Runner version update to ${{ env.new_tag_value }}",
                 "BODY": "Current Version: ${{ env.CURRENT_VERSION }}\nLatest Release: ${{ env.latest_release }}\nPrevious Major Version: ${{ env.previous_major_version }}\nLatest Release from Previous Major: ${{ env.latest_release_previous_major }}",
                 "SLACK_CHANNEL": "actions-notif"
               }
@@ -60,5 +106,3 @@ jobs:
           else
             echo "Notify value: $notify"
           fi
-
-            
