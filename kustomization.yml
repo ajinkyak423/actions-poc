@@ -92,7 +92,6 @@ patches:
 - path: fluent/fluent-sumologic-es.patch.yml
 - path: traefik/traefik.yml
 
-
 images:
 - name: summerwind/actions-runner
   newTag: v2.308.0-ubuntu-20.04
