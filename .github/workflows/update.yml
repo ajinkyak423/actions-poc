@@ -29,7 +29,7 @@ jobs:
           chmod +x ./runner-info-and-update.sh
           ./runner-info-and-update.sh
 
-          if git diff --quiet HEAD -- kustomization.yaml; then
+          if git diff HEAD -- kustomization.yaml; then
             echo "Kustomization file unchanged, skipping subsequent steps"
             echo "KUSTOMIZATION_CHANGED=false" >> $GITHUB_ENV
           else
@@ -81,6 +81,7 @@ jobs:
       #     https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
 
       - name: Create PR and Notify via Github-actions
+        if: env.KUSTOMIZATION_CHANGED == 'true'
         id: notify
         run: |
           kustomization_changed=${{ env.KUSTOMIZATION_CHANGED }}
@@ -89,7 +90,7 @@ jobs:
             git config user.email "418982+github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
             echo "Adding files"
-            git add kustomization.yaml
+            git add kustomization.yml
             git -c author.name=${{ github.actor }} -c author.email=${{ github.actor }}@users.noreply.github.com commit -m "Runner version update to ${{ env.new_tag_value }}"
 
             git push --force --set-upstream origin Runner-Update_${{ env.new_tag_value }}   # Force push to the new branch
