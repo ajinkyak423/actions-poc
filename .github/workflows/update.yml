@@ -25,7 +25,7 @@ jobs:
       - name: Get Release Information
         id: release-info
         run: |
-          sudo cp github-actions/devops/runner-update/runner-info-and-update.sh ./runner-info-and-update.sh
+          cp github-actions/devops/runner-update/runner-info-and-update.sh ./runner-info-and-update.sh
           chmod +x ./runner-info-and-update.sh
           ./runner-info-and-update.sh
 
