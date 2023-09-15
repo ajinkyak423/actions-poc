@@ -49,7 +49,7 @@ if [ "$latest_release_previous_major" != "" ]; then
     fi
     echo "updated new_tag_value: ${new_tag_value}"
     echo "new_tag_value=$new_tag_value" >>$GITHUB_ENV
-    sed -i "s/\(newTag: \)$extracted_version/\1$new_tag_value/g" "$yaml_file"    
+    sed -i "s/\(newTag: \)$current_version/\1$new_tag_value/g" "$yaml_file"    
   else
     echo "No new releases available"
   fi

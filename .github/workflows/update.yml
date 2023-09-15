@@ -89,7 +89,7 @@ jobs:
         if: env.KUSTOMIZATION_CHANGED == 'true'
         id: notify
         run: |
-            git checkout -B Runner-Update_${{ env.new_tag_value }}  # Create a new branch for the changes
+            git checkout -B Runner-Update_${{ env.new_tag_value }}
             git config user.email "418982+github-actions[bot]@users.noreply.github.com"
             git config user.name "github-actions[bot]"
             echo "Adding files"
