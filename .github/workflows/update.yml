@@ -36,12 +36,10 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -la $GITHUB_WORKSPACE
-        if: always()
 
       - name: Debug Kustomization Changed
         run: |
           echo "KUSTOMIZATION_CHANGED: ${{ env.KUSTOMIZATION_CHANGED }}"
-        if: always()
 
 
       # - name: Notify
