@@ -5,11 +5,11 @@ echo $yaml_file
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
 
-latest_release=$( "$release_metadata" | jq -r '.tag_name')
+latest_release=$(echo "$release_metadata" | jq -r '.tag_name')
 echo "latest_release=$latest_release" >>$GITHUB_ENV
 echo "latest_release: $latest_release"
 
-latest_release_date=$( "$release_metadata" | jq -r '.published_at')
+latest_release_date=$(echo "$release_metadata" | jq -r '.published_at')
 
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
