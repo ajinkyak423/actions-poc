@@ -41,7 +41,6 @@ jobs:
         run: |
           echo "KUSTOMIZATION_CHANGED: ${{ env.KUSTOMIZATION_CHANGED }}"
 
-
       # - name: Notify
       #   id: notify
       #   run: |
