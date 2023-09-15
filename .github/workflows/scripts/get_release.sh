@@ -5,7 +5,7 @@ echo $yaml_file
 
 latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
 echo "latest_release=$latest_release" >>$GITHUB_ENV
-echo "latest_release=$latest_release"
+echo "latest_release: $latest_release"
 
 latest_release_date=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.published_at')
 
@@ -22,20 +22,20 @@ all_releases=$(curl -s "https://api.github.com/repos/actions/runner/releases")
 releases_previous_major=$(echo "$all_releases" | jq -r "map(select(.tag_name | startswith(\"$previous_major_version\")))")
 
 latest_release_previous_major=$(echo "$releases_previous_major" | jq -r '.[0].tag_name')
-echo "latest_release_previous_major=$latest_release_previous_major"
 echo "latest_release_previous_major=$latest_release_previous_major" >>$GITHUB_ENV
+echo "latest_release_previous_major: $latest_release_previous_major"
 
 latest_release_previous_major_date=$(echo "$releases_previous_major" | jq -r '.[0].published_at')
 
 latest_release_previous_major_date_formatted=$(date -d "$latest_release_previous_major_date" '+%Y-%m-%d')
 echo "latest_release_previous_major_date_formatted: $latest_release_previous_major_date_formatted"
 
-current_version=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//'| cut -d'-' -f1)
-echo "current_version=$current_version"
+current_version=$(grep -A 1 'name: summerwind/actions-runner' "$yaml_file" | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//'| cut -d'-' -f1)
 echo "current_version=$current_version" >>$GITHUB_ENV
+echo "current_version: $current_version"
 
 date_diff=$(( ($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s')) / 86400 ))
-echo "date_diff=$date_diff"
+echo "Number of days between two releases: $date_diff"
 
 expected_date_diff=30
 
