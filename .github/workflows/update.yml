@@ -108,6 +108,7 @@ jobs:
                 "SLACK_CHANNEL": "actions-notif"
               }
             }'
+            
             curl -X POST \
             -d "${postData}" \
             -H "Accept: application/vnd.github+json" \
