@@ -18,7 +18,6 @@ jobs:
         id: release-info
         run: |
           echo "Current directory: $(pwd)"
-          chmod +x .github/workflows/scripts/get_release.sh
           ./.github/workflows/scripts/get_release.sh
 
           cat $GITHUB_WORKSPACE/kustomization.yml
