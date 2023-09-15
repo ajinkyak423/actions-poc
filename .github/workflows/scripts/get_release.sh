@@ -12,7 +12,7 @@ latest_release_date=$(curl -s https://api.github.com/repos/actions/runner/releas
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
 
-previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-2}')
+previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
 
