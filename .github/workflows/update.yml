@@ -14,20 +14,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          repository: ajinkyak423/temp
-          ref: runner-update
-          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-          path: github-actions
-
       - name: Get Release Information
         id: release-info
         run: |
-          cp github-actions/devops/runner-update/runner-info-and-update.sh ./runner-info-and-update.sh
-          chmod +x ./runner-info-and-update.sh
-          ./runner-info-and-update.sh
+          echo "Current directory: $(pwd)"
+          chmod +x scripts/runner-info-and-update.sh
+          cd 
+          ./scripts/runner-info-and-update.sh
 
           cat $GITHUB_WORKSPACE/kustomization.yml
 
