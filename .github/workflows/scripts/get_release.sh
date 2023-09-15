@@ -3,11 +3,13 @@
 yaml_file="$GITHUB_WORKSPACE/kustomization.yml"
 echo $yaml_file
 
-latest_release=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name')
+release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
+
+latest_release=$( "$release_metadata" | jq -r '.tag_name')
 echo "latest_release=$latest_release" >>$GITHUB_ENV
 echo "latest_release: $latest_release"
 
-latest_release_date=$(curl -s https://api.github.com/repos/actions/runner/releases/latest | jq -r '.published_at')
+latest_release_date=$( "$release_metadata" | jq -r '.published_at')
 
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
