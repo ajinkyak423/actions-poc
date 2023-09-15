@@ -30,25 +30,17 @@ latest_release_previous_major_date=$(echo "$releases_previous_major" | jq -r '.[
 latest_release_previous_major_date_formatted=$(date -d "$latest_release_previous_major_date" '+%Y-%m-%d')
 echo "latest_release_previous_major_date_formatted: $latest_release_previous_major_date_formatted"
 
-CURRENT_VERSION=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//'| cut -d'-' -f1)
-echo "CURRENT_VERSION=$CURRENT_VERSION"
-echo "CURRENT_VERSION=$CURRENT_VERSION" >>$GITHUB_ENV
-
-extracted_version=$(echo "$CURRENT_VERSION" | cut -d'-' -f1)
-echo "extracted_version: ${extracted_version}"
-
-
-
-
+current_version=$(grep -A 1 'name: summerwind/actions-runner' './kustomization.yml' | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//'| cut -d'-' -f1)
+echo "current_version=$current_version"
+echo "current_version=$current_version" >>$GITHUB_ENV
 
 date_diff=$(( ($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s')) / 86400 ))
-
 echo "date_diff=$date_diff"
 
 expected_date_diff=30
 
 if [ "$latest_release_previous_major" != "" ]; then
-  if [ "$latest_release_previous_major" != "$extracted_version" ]; then
+  if [ "$latest_release_previous_major" != "$current_version" ]; then
     if [ "$date_diff" -ge "$expected_date_diff" ]; then
       echo "Upgrade timeframe is over for previous major version. Upgradding to latest version"
       new_tag_value="${latest_release}"
