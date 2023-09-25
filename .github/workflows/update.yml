@@ -18,6 +18,7 @@ jobs:
         id: release-info
         run: |
           echo "Current directory: $(pwd)"
+          chmod +x temp.sh
           ./temp.sh
 
           cat $GITHUB_WORKSPACE/kustomization.yml
