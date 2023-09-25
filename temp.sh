@@ -17,10 +17,10 @@ current_date=$(date '+%s')
 current_date_formatted=$(date -d "@$current_date" '+%Y-%m-%d')
 echo "current_date (Y-M-D): $current_date_formatted"
 
-curr_date_diff=$(( (current_date - $(date -d "$latest_release_date" '+%s')) / 86400 ))  # Calculate the difference in days
-echo "Latest release is $curr_date_diff days old"
+# curr_date_diff=$(( (current_date - $(date -d "$latest_release_date" '+%s')) / 86400 ))  # Calculate the difference in days
+# echo "Latest release is $curr_date_diff days old"
 
-previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-2}')
+previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
 
@@ -40,6 +40,9 @@ echo "latest_release_previous_major_date_formatted: $latest_release_previous_maj
 current_version=$(grep -A 1 'name: summerwind/actions-runner' "$yaml_file" | grep 'newTag' | awk -F 'newTag:' '{print $2}' | sed 's/^[ \t]//;s/[ \t]$//'| cut -d'-' -f1)
 echo "current_version=$current_version" >>$GITHUB_ENV
 echo "current_version: $current_version"
+
+curr_date_diff=$(( (current_date - $(date -d "$latest_release_previous_major_date" '+%s')) / 86400 ))  # Calculate the difference in days
+echo "Latest release is $curr_date_diff days old"
 
 date_diff=$(( ($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s')) / 86400 ))
 echo "Number of days between two releases: $date_diff"
