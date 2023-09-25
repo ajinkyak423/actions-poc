@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yaml_file="overlays/aws-us-support/kustomization.yml"
+yaml_file="kustomization.yml"
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
 
