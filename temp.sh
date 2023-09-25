@@ -20,7 +20,7 @@ echo "current_date (Y-M-D): $current_date_formatted"
 curr_date_diff=$(( (current_date - $(date -d "$latest_release_date" '+%s')) / 86400 ))  # Calculate the difference in days
 echo "Latest release is $curr_date_diff days old"
 
-previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
+previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-2}')
 echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
 echo "Previous major version: $previous_major_version"
 
