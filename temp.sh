@@ -9,12 +9,12 @@ current_date=$(date '+%s')
 current_date_formatted=$(date -d "@$current_date" '+%Y-%m-%d')
 echo "current_date (Y-M-D): $current_date_formatted"
 
-date_diff=$(( (current_date - $(date -d "$latest_release_date" '+%s') ) / 86400 ))  # Calculate the difference in days
+date_diff=$(( (current_date - $(date -d "$latest_release_date" '+%s')) / 86400 ))  # Calculate the difference in days
 
 echo "date_diff: $date_diff"
 
 if [ "$date_diff" -ge 30 ]; then
   echo "The latest version is $date_diff days old compared to the current date."
 else
-  echo "The latest version is from the future."
+  echo "The latest version is from the future or less than 30 days old."
 fi
