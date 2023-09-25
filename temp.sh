@@ -1,8 +1,8 @@
 #!/bin/bash
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
-latest_release_date=$(date -d "$(echo "$release_metadata" | jq -r '.published_at')")
-latest_release_date_formatted=$(date -d "@$latest_release_date" '+%Y-%m-%d')
+latest_release_date=$(echo "$release_metadata" | jq -r '.published_at')
+latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date (Y-M-D): $latest_release_date_formatted"
 
 current_date=$(date '+%s')
