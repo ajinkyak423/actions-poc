@@ -51,8 +51,8 @@ expected_date_diff=30
 
 if [ "$latest_release_previous_major" != "" ]; then
   if [ "$latest_release_previous_major" != "$current_version" ]; then
-    if [ "$date_diff" -ge "$expected_date_diff"  ||  "$curr_date_diff" -ge "$expected_date_diff" ]; then
-      echo "Upgrade timeframe is over for previous major version. Upgradding to latest version"
+    if [ "$date_diff" -ge "$expected_date_diff" ] || [ "$curr_date_diff" -ge "$expected_date_diff" ]; then
+      echo "Upgrade timeframe is over for previous major version. Upgrading to the latest version"
       new_tag_value="${latest_release}"
     else
       new_tag_value="${latest_release_previous_major}"
@@ -64,5 +64,6 @@ if [ "$latest_release_previous_major" != "" ]; then
     echo "No new releases available"
   fi
 else
-  echo "No releases available for the previous major version"
+  echo "No releases available for the previous major version"
 fi
+
