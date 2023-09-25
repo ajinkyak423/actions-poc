@@ -2,16 +2,18 @@
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
 latest_release_date=$(date -d "$(echo "$release_metadata" | jq -r '.published_at')" '+%s')
+
+echo "latest_release_date: $latest_release_date"
+
 current_date=$(date '+%s')
+echo "current_date: $current_date"
 
-date_diff=$(( (latest_release_date - current_date) / 86400 ))  # Calculate the difference in days
+date_diff=$(( (current_date - latest_release_date) / 86400 ))  # Calculate the difference in days
 
-echo "date_diff : $date_diff"
+echo "date_diff: $date_diff"
 
-expected_date_diff=30
-
-if [ "$date_diff" -ge "$expected_date_diff" ]; then
-  echo "The difference between release date and current date is more than 30 days."
+if [ "$date_diff" -ge 0 ]; then
+  echo "The latest version is $date_diff days old compared to the current date."
 else
-  echo "The difference between release date and current date is not more than 30 days."
+  echo "The latest version is from the future."
 fi
