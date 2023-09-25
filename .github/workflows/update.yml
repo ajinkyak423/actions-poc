@@ -18,7 +18,7 @@ jobs:
         id: release-info
         run: |
           echo "Current directory: $(pwd)"
-          ./.github/workflows/scripts/temp.sh
+          ./temp.sh
 
           cat $GITHUB_WORKSPACE/kustomization.yml
 
