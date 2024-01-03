@@ -3,4 +3,7 @@ import os
 key = "deploy_tanent_file"
 value = "yourfile.txt"
 
-print(f"::set-env name={key}::{value}")
+env_file = os.getenv('GITHUB_ENV')
+
+with open(env_file, "a") as myfile:
+    myfile.write(f"{key}={value}")
