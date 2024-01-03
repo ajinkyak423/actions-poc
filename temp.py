@@ -1,9 +1,11 @@
 import os
 
-key = "deploy_tanent_file"
-value = "yourfile.txt"
+env_var_name = "deploy_tanent_file"
+env_var_value = "yourfile.txt"
 
-env_file = os.getenv('GITHUB_ENV')
+# GitHub Actions provides the GITHUB_ENV path in the environment
+github_env = os.getenv('GITHUB_ENV')
 
-with open(env_file, "a") as myfile:
-    myfile.write(f"{key}={value}")
+# Append the new environment variable to the GITHUB_ENV file
+with open(github_env, 'a') as env_file:
+    env_file.write(f"{env_var_name}={env_var_value}\n")
