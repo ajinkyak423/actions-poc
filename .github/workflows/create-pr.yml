@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: print data
         run: |
-          echo '${{ toJSON(github.event.inputs) }}'
+          echo '${{ github.event.inputs.TANENT_NAME }}'
           
       # - name: Display Workflow Inputs
       #   run: |
