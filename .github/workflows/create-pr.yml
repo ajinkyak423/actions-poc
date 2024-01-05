@@ -2,23 +2,13 @@ name: Create PR on behalf of Workflows
 on:
   workflow_dispatch:
     inputs:
-      REPOSITORY:
-        description: 'The Ridecell repository where PR should be created, in the format Ridecell/{repo_name}'
-        required: true
-      REF:
-        description: 'The desired branch/tag/sha to merge into main/master'
-        required: true
-      TITLE:
-        description: 'Title for the Pull Request'
-        required: true
-      BODY:
-        description: 'Text body for the Pull Request'
-        required: false
-        default: ''
-      SLACK_CHANNEL:
-        description: 'Slack channel to be notified of PR creation'
-        required: false
-        default: 'devops-eng-private'
+      TANENT_NAME:
+          description: "The Summon tanent name to which new tag to be deployed. EX: toka-qa"
+          required: true
+      IMAGE_TAG_VALUE:
+          description: "New summon platform tag to be updated"
+          required: true
+
 
 jobs:
   create-pr:
@@ -26,82 +16,86 @@ jobs:
     name: Create Pull Request
 
     steps:
-      - name: Display Workflow Inputs
+      - name: print data
         run: |
           echo '${{ toJSON(github.event.inputs) }}'
-
-      - name: Format inputs for postdata body
-        id: post-body
-        run: |
-          # It seems although input BODY was received in JSON format (e.g. newlines escaped),
-          # the escaped values gets converted. Hence, we need to format it to JSON again for
-          # building our postData body in the next step.
           
-          echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
+      # - name: Display Workflow Inputs
+      #   run: |
+      #     echo '${{ toJSON(github.event.inputs) }}'
 
-      - name: Debug Info
-        run: |
-          echo "github.event_name: ${{ github.event_name }}"
-          echo "github.event.inputs.DESIRED_VERSION: ${{ inputs.PR }}"
+      # - name: Format inputs for postdata body
+      #   id: post-body
+      #   run: |
+      #     # It seems although input BODY was received in JSON format (e.g. newlines escaped),
+      #     # the escaped values gets converted. Hence, we need to format it to JSON again for
+      #     # building our postData body in the next step.
+          
+      #     echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request
-        id: cpr
-        run: |
-          TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
-          REPO="${{ github.repository }}"
-          BASE=main
-          postData='{
-            "title":"${{ inputs.TITLE }}",
-            "body":"${{ steps.post-body.outputs.PR_BODY }}",
-            "head":"${{ inputs.REF }}",
-            "base":"main"
-          }'
-          # Create the pull request and extract the PR URL directly using jq
-          pr_url=$(curl -X POST \
-            -H "Authorization: token $TOKEN" \
-            -H "Accept: application/json" \
-            -d "${postData}" \
-            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
+      # - name: Debug Info
+      #   run: |
+      #     echo "github.event_name: ${{ github.event_name }}"
+      #     echo "github.event.inputs.DESIRED_VERSION: ${{ inputs.PR }}"
 
-          # Set the PR URL as an environment variable
-          echo "pr_url=$pr_url"
-          echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
+      # - name: Create Pull Request
+      #   id: cpr
+      #   run: |
+      #     TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
+      #     REPO="${{ github.repository }}"
+      #     BASE=main
+      #     postData='{
+      #       "title":"${{ inputs.TITLE }}",
+      #       "body":"${{ steps.post-body.outputs.PR_BODY }}",
+      #       "head":"${{ inputs.REF }}",
+      #       "base":"main"
+      #     }'
+      #     # Create the pull request and extract the PR URL directly using jq
+      #     pr_url=$(curl -X POST \
+      #       -H "Authorization: token $TOKEN" \
+      #       -H "Accept: application/json" \
+      #       -d "${postData}" \
+      #       "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
 
-          # status_code=$(echo $pr_url | jq -r '.[1].status_code')
+      #     # Set the PR URL as an environment variable
+      #     echo "pr_url=$pr_url"
+      #     echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
 
-      - name: Notify Devops of PR
-        id: slack-notify
-        uses: sonots/slack-notice-action@v3
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-        with:
-          username: GithubActions
-          status: custom
-          payload: |
-            {
-              "channel": "#${{ inputs.SLACK_CHANNEL }}",
-              "text": "New version available",
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "New version available"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "${{steps.post-body.outputs.PR_BODY}}"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "PR: <${{steps.cpr.outputs.pr_url}}>"
-                  }
-                }
-              ]
-            }
+      #     # status_code=$(echo $pr_url | jq -r '.[1].status_code')
+
+      # - name: Notify Devops of PR
+      #   id: slack-notify
+      #   uses: sonots/slack-notice-action@v3
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      #   with:
+      #     username: GithubActions
+      #     status: custom
+      #     payload: |
+      #       {
+      #         "channel": "#${{ inputs.SLACK_CHANNEL }}",
+      #         "text": "New version available",
+      #         "blocks": [
+      #           {
+      #             "type": "header",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "New version available"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "${{steps.post-body.outputs.PR_BODY}}"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "PR: <${{steps.cpr.outputs.pr_url}}>"
+      #             }
+      #           }
+      #         ]
+      #       }
