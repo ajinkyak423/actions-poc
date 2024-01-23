@@ -9,3 +9,5 @@ github_env = os.getenv('GITHUB_ENV')
 # Append the new environment variable to the GITHUB_ENV file
 with open(github_env, 'a') as env_file:
     env_file.write(f"{env_var_name}={env_var_value}\n")
+
+\\\\
