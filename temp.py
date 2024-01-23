@@ -11,3 +11,4 @@ with open(github_env, 'a') as env_file:
     env_file.write(f"{env_var_name}={env_var_value}\n")
 
 \\\\
+sdfds
