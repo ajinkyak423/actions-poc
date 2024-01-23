@@ -73,6 +73,7 @@ jobs:
           delete-branch: true
           title: 'SummonPlatform version change for ${{ inputs.TENANTS_NAME }}'
           labels: "automerge"
+          base: "main"
         
       - name: Wait for PR to be ready
         if: ${{ steps.cpr.outputs.pull-request-number != '' }}
