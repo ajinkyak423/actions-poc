@@ -81,7 +81,7 @@ jobs:
           status=""
           retry_count=6
           while [[ "$status" != "clean" && $retry_count -ne 0 ]]; do
-            sleep 20
+            sleep 5
             status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')
             echo $status
             ((retry_count--))
