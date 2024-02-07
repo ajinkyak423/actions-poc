@@ -38,7 +38,9 @@ jobs:
       - name: directory
         run: |
             echo "Current directory: $(pwd)"
-            echo "TENANTS_NAME=${{ inputs.TENANTS_NAME }}"
+            if [ "${{ inputs.PULL-REQUEST-NUMBER }}" == null ]; then
+              echo "TENANTS_NAME is nuLL"
+            fi
             ls -ltra
             # python temp.py
             # echo "deploy_tanent_file=${{ env.deploy_tanent_file }}"
