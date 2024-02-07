@@ -38,7 +38,7 @@ jobs:
       - name: directory
         run: |
             echo "Current directory: $(pwd)"
-            if [ "${{ inputs.PULL-REQUEST-NUMBER }}" == null ]; then
+            if [ "${{ inputs.PULL-REQUEST-NUMBER }}" == "" ]; then
               echo "TENANTS_NAME is nuLL"
             fi
             ls -ltra
@@ -83,15 +83,21 @@ jobs:
           base: "main"
         
       - name: Wait for PR to be ready
-        if: ${{ steps.cpr.outputs.pull-request-number != '' }}
         run: |
           status=""
           retry_count=6
-          while [[ "$status" != "clean" && $retry_count -ne 0 ]]; do
-            sleep 5
-            status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')           
+          while [[ "$status" != "clean" ]]; do
+            sleep 10
+            status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.RIDECELL_GITHUB_ACTION_TOKEN_REPO_ALL }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')
+            if [[ $status -eq "behind" ]]; then
+              git config user.name "Update branch"
+              git config user.email github-actions@github.com
+              git checkout ${{ env.CURRENT_DATE }}-auto-deploy
+              git merge main --no-edit -m "Merged main branch on $(date +%F)"
+              git push origin ${{ env.CURRENT_DATE }}-auto-deploy
+            fi
             echo $status
-            ((retry_count--))
+            # ((retry_count--))
           done
     
       # it has auto-update for the branch. Default option is merge for auto-update branch.
@@ -103,14 +109,14 @@ jobs:
       #     pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
       #     merge-method: squash
 
-      - name: Update PR Branch
-        uses: adRise/update-pr-branch@v0.7.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: 'main'
-          required_approval_count: 1
+      # - name: Update PR Branch
+      #   uses: adRise/update-pr-branch@v0.7.0
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     base: 'main'
+      #     required_approval_count: 1
           
-      - name: PR Merge status
-        run: |
-          merged_status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.merged' | tr -d '"')
-          echo "merged_status=$merged_status"
+      # - name: PR Merge status
+      #   run: |
+      #     merged_status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.merged' | tr -d '"')
+      #     echo "merged_status=$merged_status"
