@@ -2,6 +2,10 @@ name: summon-platform-CI
 
 on:
   workflow_dispatch:
+    inputs:
+      TENANTS_NAME:
+          description: "The Summon tanent name to which new tag to be deployed. EX: toka-qa"
+          required: false
 
     
 jobs:
@@ -34,6 +38,7 @@ jobs:
       - name: directory
         run: |
             echo "Current directory: $(pwd)"
+            echo "TENANTS_NAME=${{ inputs.TENANTS_NAME }}
             ls -ltra
             # python temp.py
             # echo "deploy_tanent_file=${{ env.deploy_tanent_file }}"
