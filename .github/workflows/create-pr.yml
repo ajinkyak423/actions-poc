@@ -82,7 +82,7 @@ jobs:
           retry_count=6
           while [[ "$status" != "clean" && $retry_count -ne 0 ]]; do
             sleep 5
-            status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')
+            status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')           
             echo $status
             ((retry_count--))
           done
@@ -102,3 +102,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: 'main'
           required_approval_count: 1
+          
+      - name: PR Merge status
+        run: |
+          merged_status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.merged' | tr -d '"')
+          echo "merged_status=$merged_status"
