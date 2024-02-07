@@ -88,7 +88,7 @@ jobs:
           retry_count=6
           while [[ "$status" != "clean" ]]; do
             sleep 10
-            status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.RIDECELL_GITHUB_ACTION_TOKEN_REPO_ALL }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')
+            status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.MY_GITHUB_ACTION_TOKEN }} https://api.github.com/repos/ajinkyak423/actions-poc/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')
             if [[ $status -eq "behind" ]]; then
               git config user.name "Update branch"
               git config user.email github-actions@github.com
