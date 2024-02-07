@@ -81,7 +81,7 @@ jobs:
           title: 'SummonPlatform version change for ${{ inputs.TENANTS_NAME }}'
           labels: "automerge"
           base: "main"
-        s
+          
       - name: Wait for PR to be ready
         run: |
           status=""
