@@ -73,7 +73,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
           commit-message: Summon version update for ${{ inputs.TENANTS_NAME }}
           committer: ridecell-github-action <devops+github-actions@ridecell.com>
           branch: ${{ env.CURRENT_DATE }}-auto-deploy
@@ -81,7 +81,7 @@ jobs:
           title: 'SummonPlatform version change for ${{ inputs.TENANTS_NAME }}'
           labels: "automerge"
           base: "main"
-        
+        s
       - name: Wait for PR to be ready
         run: |
           status=""
