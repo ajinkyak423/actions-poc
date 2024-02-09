@@ -80,7 +80,7 @@ jobs:
         with:
           token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
           commit-message: Summon version update for ${{ inputs.TENANTS_NAME }}
-          committer: ${{ inputs.ACTOR }}
+          committer: ${{ inputs.ACTOR }} <${{ inputs.ACTOR }}@users.noreply.github.com>
           branch: ${{ env.CURRENT_DATE }}-auto-deploy
           delete-branch: true
           title: 'SummonPlatform version change for ${{ inputs.TENANTS_NAME }}'
