@@ -123,7 +123,7 @@ jobs:
           curl -X PATCH \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            -d '{"auto_merge": true, "merge_method": "squash"}' \
+            -d '{"auto_merge": "true", "merge_method": "squash"}' \
             "https://api.github.com/repos/ajinkyak423/actions-poc/pulls/${{ steps.cpr.outputs.pull-request-number }}"
 
           # echo "Auto-merge with squash merge enabled for PR $pull_number."
