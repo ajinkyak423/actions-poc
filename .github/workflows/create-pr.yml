@@ -78,8 +78,8 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-          commit-message: Summon version update for ${{ inputs.TENANTS_NAME }} Co-authored-by: ${{ inputs.CO_AUTHORS }} 
+          token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }} 
+          commit-message: "Summon version update for ${{ inputs.TENANTS_NAME }} Co-authored-by: ${{ inputs.CO_AUTHORS }}"
           committer: ${{ inputs.ACTOR }} <${{ inputs.ACTOR }}@users.noreply.github.com>
           branch: ${{ env.CURRENT_DATE }}-auto-deploy
           delete-branch: true
