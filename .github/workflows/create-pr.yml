@@ -171,13 +171,7 @@ jobs:
 
   update-summon-image-tags:
       name: 'Create PR to Update Summon Image Tags'
-      # only create a PR to update summon-build and summon-run images when changes
-      # made to master branch -- otherwise, branch activity affecting dockerfiles/*
-      # and requirements.txt will trigger PRs updating the images to
-      # summon-build:[date]-[sha]-[branch] and summon-run:[date]-[sha]-[branch]
-      # instead of summon-build:[date]-[sha]-master and summon-run:[date]-[sha]-master
-      if: ${{ github.ref == 'refs/heads/master' }}
-      runs-on: small
+      runs-on: ubuntu-latest
       needs: Build-docker-image
 
       steps:
