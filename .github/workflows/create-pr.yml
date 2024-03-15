@@ -15,8 +15,10 @@ on:
     
 jobs:
   Build-docker-image:
-    name: docker_image
     runs-on: ubuntu-latest
+    name: Create Pull Request
+    outputs:
+      this: "hii"
     steps:
       # - name: Setup Python
       #   uses: actions/setup-python@v4
@@ -40,19 +42,19 @@ jobs:
       #     path: actions-poc
       #     token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
 
-      - name: directory
-        run: |
-            echo "Current directory: $(pwd)"
-            if [ "${{ inputs.PULL-REQUEST-NUMBER }}" == "" ]; then
-              echo "TENANTS_NAME is nuLL"
-            fi
-            ls -ltra
-            # python temp.py
-            # echo "deploy_tanent_file=${{ env.deploy_tanent_file }}"
-            time=$(date)
-            echo "time=$time" >> yourfile.txt
-            echo "CURRENT_DATE=$(date +'%s')" >> $GITHUB_ENV
-            cat yourfile.txt
+      # - name: directory
+      #   run: |
+      #       echo "Current directory: $(pwd)"
+      #       if [ "${{ inputs.PULL-REQUEST-NUMBER }}" == "" ]; then
+      #         echo "TENANTS_NAME is nuLL"
+      #       fi
+      #       ls -ltra
+      #       # python temp.py
+      #       # echo "deploy_tanent_file=${{ env.deploy_tanent_file }}"
+      #       time=$(date)
+      #       echo "time=$time" >> yourfile.txt
+      #       echo "CURRENT_DATE=$(date +'%s')" >> $GITHUB_ENV
+      #       cat yourfile.txt
     
       # - name: update file in poc
       #   if: env.DEPLOY != null    
@@ -135,3 +137,51 @@ jobs:
       #   run: |
       #     merged_status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.merged' | tr -d '"')
       #     echo "merged_status=$merged_status"
+      #     username: GithubActions
+      #     status: custom
+      #     payload: |
+      #       {
+      #         "channel": "#${{ inputs.SLACK_CHANNEL }}",
+      #         "text": "New version available",
+      #         "blocks": [
+      #           {
+      #             "type": "header",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "New version available"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "plain_text",
+      #               "text": "${{steps.post-body.outputs.PR_BODY}}"
+      #             }
+      #           },
+      #           {
+      #             "type": "section",
+      #             "text": {
+      #               "type": "mrkdwn",
+      #               "text": "PR: <${{steps.cpr.outputs.pr_url}}>"
+      #             }
+      #           }
+      #         ]
+      #       }
+
+  update-summon-image-tags:
+      name: 'Create PR to Update Summon Image Tags'
+      # only create a PR to update summon-build and summon-run images when changes
+      # made to master branch -- otherwise, branch activity affecting dockerfiles/*
+      # and requirements.txt will trigger PRs updating the images to
+      # summon-build:[date]-[sha]-[branch] and summon-run:[date]-[sha]-[branch]
+      # instead of summon-build:[date]-[sha]-master and summon-run:[date]-[sha]-master
+      if: ${{ github.ref == 'refs/heads/master' }}
+      runs-on: small
+      needs: Build-docker-image
+
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: echo
+          run: echo ${{ needs.Build-docker-image.outputs.this }}
