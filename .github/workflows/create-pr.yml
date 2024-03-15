@@ -112,18 +112,18 @@ jobs:
       #     done
     
       # it has auto-update for the branch. Default option is merge for auto-update branch.
-      - name: Enable automerge
-        shell: bash
-        run: |
-          response=$(curl -X PATCH \
-            -H "Authorization: token ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            -d '{"auto_merge": true, "merge_method": "squash"}' \
-            "https://api.github.com/repos/ajinkyak423/actions-poc/pulls/${{ steps.cpr.outputs.pull-request-number }}")
+      # - name: Enable automerge
+      #   shell: bash
+      #   run: |
+      #     response=$(curl -X PATCH \
+      #       -H "Authorization: token ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
+      #       -H "Accept: application/vnd.github.v3+json" \
+      #       -d '{"auto_merge": true, "merge_method": "squash"}' \
+      #       "https://api.github.com/repos/ajinkyak423/actions-poc/pulls/${{ steps.cpr.outputs.pull-request-number }}")
           
-          echo "Response: $response"
+      #     echo "Response: $response"
 
-          echo "Auto-merge with squash merge enabled successfully."
+      #     echo "Auto-merge with squash merge enabled successfully."
 
 
 
