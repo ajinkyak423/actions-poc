@@ -1,17 +1,18 @@
 name: summon-platform-CI
 
 on:
-  workflow_dispatch:
-    inputs:
-      TENANTS_NAME:
-          description: "The Summon tanent name to which new tag to be deployed. EX: toka-qa"
-          required: true
-      IMAGE_TAG_VALUE:
-          description: "New summon platform tag to be updated"
-          required: true
-      ACTOR:
-          description: "Person who commited in summon platform"
-          required: true
+  push:
+  # workflow_dispatch:
+  #   inputs:
+  #     TENANTS_NAME:
+  #         description: "The Summon tanent name to which new tag to be deployed. EX: toka-qa"
+  #         required: true
+  #     IMAGE_TAG_VALUE:
+  #         description: "New summon platform tag to be updated"
+  #         required: true
+  #     ACTOR:
+  #         description: "Person who commited in summon platform"
+  #         required: true
     
 jobs:
   Build-docker-image:
