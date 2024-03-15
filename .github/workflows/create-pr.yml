@@ -15,8 +15,8 @@ on:
     
 jobs:
   Build-docker-image:
-    runs-on: ubuntu-latest
     name: Create Pull Request
+    runs-on: ubuntu-latest
     outputs:
       this: "hii"
     steps:
