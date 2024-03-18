@@ -21,6 +21,13 @@ jobs:
     outputs:
       this: hii
     steps:
+
+      - name : dir
+        run: |
+          ls -la
+          ls ../
+          ls ../../
+          pwd
       # - name: Setup Python
       #   uses: actions/setup-python@v4
       #   with:
@@ -32,8 +39,8 @@ jobs:
       #     DEPLOY=$(echo "${{ github.event.head_commit.message }}" | sed -n 's/.*\[deploy:[[:space:]]*\([^]]*\)].*/\1/p')
       #     echo "DEPLOY=$DEPLOY" >> $GITHUB_ENV
 
-      - name: checkout code
-        uses: actions/checkout@v4
+      # - name: checkout code
+      #   uses: actions/checkout@v4
 
       # - name: create PR to deploy latest build to tenant
       #   if: env.DEPLOY != null
