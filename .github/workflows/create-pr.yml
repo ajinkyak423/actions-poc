@@ -25,8 +25,11 @@ jobs:
       - name : dir
         run: |
           ls -la
+          echo "hii"
           ls ../
+          echo "bye"
           ls ../../
+          echo "see you"
           pwd
       # - name: Setup Python
       #   uses: actions/setup-python@v4
