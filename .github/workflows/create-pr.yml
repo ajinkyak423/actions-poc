@@ -21,6 +21,19 @@ jobs:
     outputs:
       this: hii
     steps:
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name : dir
+        run: |
+          ls -la
+          echo "hii"
+          ls ../
+          echo "bye"
+          ls ../../
+          echo "see you"
+          pwd
       # - name: Setup Python
       #   uses: actions/setup-python@v4
       #   with:
@@ -32,8 +45,8 @@ jobs:
       #     DEPLOY=$(echo "${{ github.event.head_commit.message }}" | sed -n 's/.*\[deploy:[[:space:]]*\([^]]*\)].*/\1/p')
       #     echo "DEPLOY=$DEPLOY" >> $GITHUB_ENV
 
-      - name: checkout code
-        uses: actions/checkout@v4
+      # - name: checkout code
+      #   uses: actions/checkout@v4
 
       # - name: create PR to deploy latest build to tenant
       #   if: env.DEPLOY != null
