@@ -20,7 +20,7 @@ jobs:
                 slack_message="New tag deployed to ${{ inputs.TENANTS_NAME }}"
             else 
                 slack_message="New tag deployed to no tenants"
-                exit 2
+                cat nonexistent_file.txt
             fi
             echo "slack_message=$slack_message" >> $GITHUB_ENV
 
