@@ -36,7 +36,25 @@ jobs:
             SLACK_MESSAGE_ON_FAILURE: 'build failed'
             SLACK_MESSAGE_ON_CANCEL: 'build cancelled'
             ENABLE_ESCAPES: true
-            SLACK_CUSTOM_PAYLOAD: '{"text": "Hello, World!"}'
+            SLACK_CUSTOM_PAYLOAD: '{
+                "text": "Automated Pull Request Created",
+                "blocks": [
+                  {
+                    "type": "header",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Automated PR created in ${{ inputs.REPOSITORY }}"
+                    }
+                  },
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*Pull Request*:\n<${{ steps.cpr.outputs.pullreq_url }}|${{ inputs.TITLE }}>"
+                    }
+                  }
+                ]
+              }'
             
 
     
