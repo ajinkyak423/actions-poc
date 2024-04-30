@@ -39,5 +39,6 @@ jobs:
             SLACK_MESSAGE_ON_SUCCESS: '${{ env.slack_message }}'
             SLACK_MESSAGE_ON_FAILURE: 'build failed'
             SLACK_MESSAGE_ON_CANCEL: 'build cancelled'
+            SLACK_TITLE: ${{ github.repository.name}}
 
     
