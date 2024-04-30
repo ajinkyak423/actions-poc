@@ -38,25 +38,7 @@ jobs:
             ENABLE_ESCAPES: true
             SLACKIFY_MARKDOWN: true
             SLACK_CUSTOM_PAYLOAD: |
-             '{
-                "text": "Automated Pull Request Created",
-                "blocks": [
-                  {
-                    "type": "header",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "Automated PR created"
-                    }
-                  },
-                  {
-                    "type": "section",
-                    "text": {
-                      "type": "mrkdwn",
-                      "text": "*Pull Request*"
-                    }
-                  }
-                ]
-              }'
+             '{"text": "Hello, World!"}'
             
 
     
