@@ -31,7 +31,6 @@ jobs:
             SLACK_COLOR: ${{ job.status }}
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
             SLACK_USERNAME: GithubActions
-            SLACK_ICON: "https://avatars.githubusercontent.com/u/15816027?v=4"
             SLACK_CHANNEL: "#actions-notif"
             SLACK_MESSAGE_ON_SUCCESS: '${{ env.slack_message }}'
             SLACK_MESSAGE_ON_FAILURE: 'build failed'
@@ -40,7 +39,6 @@ jobs:
             SLACKIFY_MARKDOWN: true
             SLACK_CUSTOM_PAYLOAD: |
              '{
-                "channel": ""#actions-notif",
                 "text": "Automated Pull Request Created",
                 "blocks": [
                   {
