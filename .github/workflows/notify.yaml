@@ -25,6 +25,7 @@ jobs:
             echo "slack_message=$slack_message" >> $GITHUB_ENV
 
         - name: Send message to slack
+          if: always()
           uses: rtCamp/action-slack-notify@v2
           env:
             SLACK_COLOR: ${{ job.status }}
