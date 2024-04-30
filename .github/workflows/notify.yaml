@@ -37,7 +37,7 @@ jobs:
             SLACK_MESSAGE_ON_FAILURE: 'build failed'
             SLACK_MESSAGE_ON_CANCEL: 'build cancelled'
             SLACK_CUSTOM_PAYLOAD: |
-              {
+             '{
                 "channel": ""#actions-notif",
                 "text": "Automated Pull Request Created",
                 "blocks": [
@@ -56,7 +56,7 @@ jobs:
                     }
                   }
                 ]
-              }
+              }'
             
 
     
