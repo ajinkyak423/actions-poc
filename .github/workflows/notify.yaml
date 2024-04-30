@@ -36,7 +36,6 @@ jobs:
             SLACK_MESSAGE_ON_FAILURE: 'build failed'
             SLACK_MESSAGE_ON_CANCEL: 'build cancelled'
             ENABLE_ESCAPES: true
-            SLACKIFY_MARKDOWN: true
             SLACK_CUSTOM_PAYLOAD: |
              '{"text": "Hello, World!"}'
             
