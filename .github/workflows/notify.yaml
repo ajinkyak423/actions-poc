@@ -27,6 +27,7 @@ jobs:
         - name: Send message to slack
           uses: rtCamp/action-slack-notify@v2
           env:
+            SLACK_COLOR: ${{ job.status }}
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
             SLACK_CHANNEL: "#actions-notif"
             SLACK_MESSAGE_ON_SUCCESS: ${{ env.slack_message }}
