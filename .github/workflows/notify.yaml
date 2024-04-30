@@ -1,0 +1,38 @@
+name: Send message to slack
+on:
+  push:
+  workflow_dispatch:
+    inputs:
+        TENANTS_NAME:
+            description: "The Summon tanent name to which new tag to be deployed. EX: toka-qa"
+            required: false
+
+
+jobs:
+  send-message-on-slack:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Check Out Repository
+          uses: actions/checkout@v2
+
+        - name: Slack Message
+          run: |
+            if ${{ inputs.TENANTS_NAME }}; then
+                slack_message="New tag deployed to ${{ inputs.TENANTS_NAME }}"
+            else 
+                slack_message="New tag deployed to no tenants"
+                exit 1
+            fi
+            echo "slack_message=$slack_message" >> $GITHUB_ENV
+
+        - name: Send message to slack
+          uses: rtCamp/action-slack-notify@v2
+          env:
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_CHANNEL: "#actions-notif"
+            SLACK_MESSAGE_ON_SUCCESS: ${{ env.slack_message }}
+            SLACK_MESSAGE_ON_FAILURE: 'build failed'
+            SLACK_MESSAGE_ON_CANCEL: 'build cancelled'
+            
+
+    
