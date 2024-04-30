@@ -54,7 +54,7 @@ jobs:
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "*Pull Request* ${{ env.slack_message }}"
+                      "text": "*Pull Request*"
                     }
                   }
                 ]
