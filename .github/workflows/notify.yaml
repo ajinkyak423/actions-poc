@@ -30,10 +30,41 @@ jobs:
           env:
             SLACK_COLOR: ${{ job.status }}
             SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_USERNAME: GithubActions
+            SLACK_ICON: "https://avatars.githubusercontent.com/u/15816027?v=4"
             SLACK_CHANNEL: "#actions-notif"
             SLACK_MESSAGE_ON_SUCCESS: '${{ env.slack_message }}'
             SLACK_MESSAGE_ON_FAILURE: 'build failed'
             SLACK_MESSAGE_ON_CANCEL: 'build cancelled'
+            SLACK_CUSTOM_PAYLOAD: |
+                {
+                    text: "Custom Field Check",
+                    attachments: [{
+                    "author_name": "sonots@slack-notice-action", // json
+                    fallback: 'fallback',
+                    color: 'good',
+                    title: 'CI Result',
+                    text: 'Succeeded',
+                    fields: [{
+                        title: 'lower case',
+                        value: 'LOWER CASE CHECK'.toLowerCase(),
+                        short: true
+                    },
+                    {
+                        title: 'reverse',
+                        value: 'gnirts esrever'.split('').reverse().join(''),
+                        short: true
+                    },
+                    {
+                        title: 'long title1',
+                        value: 'long value1',
+                        short: false
+                    }],
+                    actions: [{
+                    }]
+                    }]
+                }
+  
             
 
     
