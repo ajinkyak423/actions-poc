@@ -43,14 +43,14 @@ jobs:
                     "type": "header",
                     "text": {
                       "type": "plain_text",
-                      "text": "Automated PR created in ${{ inputs.REPOSITORY }}"
+                      "text": "Automated PR created in"
                     }
                   },
                   {
                     "type": "section",
                     "text": {
                       "type": "mrkdwn",
-                      "text": "*Pull Request*:\n<${{ steps.cpr.outputs.pullreq_url }}|${{ inputs.TITLE }}>"
+                      "text": "*Pull Request*:\n ${{ env.slack_message }}>"
                     }
                   }
                 ]
