@@ -16,7 +16,7 @@ jobs:
 
         - name: Slack Message
           run: |
-            if [[ !-z "${{ inputs.TENANTS_NAME }}" ]]; then
+            if [[ ! -z "${{ inputs.TENANTS_NAME }}" ]]; then
                 slack_message="New tag deployed to ${{ inputs.TENANTS_NAME }}"
             else 
                 slack_message="New tag deployed to no tenants"
