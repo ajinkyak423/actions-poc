@@ -1,0 +1,4 @@
+ruamel.yaml==0.17.21
+pandas==1.5.3
+kubernetes==29.0.0
+slack_sdk==3.21.3

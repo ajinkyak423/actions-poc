@@ -6,7 +6,7 @@ jobs:
   slack-notify:
     runs-on: ubuntu-latest
     container:
-            image: ajinka4ridecell/krr:v11
+        image: ajinka4ridecell/krr:v11
 
     steps:
       - name: Check Out Repository
@@ -16,6 +16,7 @@ jobs:
         run: |
           touch test.csv
           ls -ll /usr/local/bin/
+          pip install -r requirements.txt
 
       - name: Send CSV to Slack
         run: |
