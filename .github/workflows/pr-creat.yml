@@ -15,8 +15,4 @@ jobs:
 
       - name: Send CSV to Slack
         run: |
-            CSV_FILE=$(ls *.csv)
-            curl -F file=test.csv -F "initial_comment=Here is the generated CSV file" -F channels=C05QXU43GUQ -H "Authorization: Bearer $SLACK_CSV_APP_TOKEN" https://slack.com/api/files.upload
-        env:
-            SLACK_CSV_APP_TOKEN: ${{ secrets.SLACK_CSV_APP_TOKEN }}
-        
+            python temp/krr_batch_processing.py
