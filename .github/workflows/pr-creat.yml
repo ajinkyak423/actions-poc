@@ -15,6 +15,7 @@ jobs:
       - name: create csv
         run: |
           touch test.csv
+          ls -ll /usr/local/bin/
 
       - name: Send CSV to Slack
         run: |
