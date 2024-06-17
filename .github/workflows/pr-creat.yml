@@ -5,6 +5,9 @@ on:
 jobs:
   slack-notify:
     runs-on: ubuntu-latest
+    container:
+            image: ajinka4ridecell/krr:v11
+
     steps:
       - name: Check Out Repository
         uses: actions/checkout@v2
@@ -15,5 +18,4 @@ jobs:
 
       - name: Send CSV to Slack
         run: |
-            pip install ruamel.yaml==0.18.6 pandas==1.5.3 kubernetes==29.0.0 slack_sdk==3.21.3
             python temp/krr_batch_processing.py
