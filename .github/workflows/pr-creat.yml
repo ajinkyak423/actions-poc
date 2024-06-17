@@ -16,7 +16,7 @@ jobs:
         run: |
           touch test.csv
           ls -ll /usr/local/bin/
-          pip install -r requirements.txt
+          pip list 
 
       - name: Send CSV to Slack
         run: |
