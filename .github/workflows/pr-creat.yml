@@ -15,7 +15,6 @@ jobs:
       - name: create csv
         run: |
           touch test.csv
-          ls -ll /usr/local/bin/
           pip list 
 
       - name: Send CSV to Slack
