@@ -1,7 +1,7 @@
 #!/bin/bash
 
-yaml_file="$GITHUB_WORKSPACE/kustomization.yml"
-arc_yaml_files=$(find $GITHUB_WORKSPACE/apps/arc-runners -type f -name "*values*.yml")
+yaml_file="kustomization.yml"
+arc_yaml_files=$(find apps/arc-runners -type f -name "*values*.yml")
 echo "arc_yaml_files: $arc_yaml_files"
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
