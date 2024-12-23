@@ -1,7 +1,8 @@
 #!/bin/bash
 
 yaml_file="$GITHUB_WORKSPACE/kustomization.yml"
-echo $yaml_file
+arc_yaml_files=$(find apps/arc-runners -type f -name "*values*.yml")
+echo "arc_yaml_files: $arc_yaml_files"
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
 
@@ -13,6 +14,13 @@ latest_release_date=$(echo "$release_metadata" | jq -r '.published_at')
 
 latest_release_date_formatted=$(date -d "$latest_release_date" '+%Y-%m-%d')
 echo "latest_release_date_formatted: $latest_release_date_formatted"
+
+current_date=$(date '+%s')
+current_date_formatted=$(date -d "@$current_date" '+%Y-%m-%d')
+echo "current_date (Y-M-D): $current_date_formatted"
+
+curr_date_diff=$(( (current_date - $(date -d "$latest_release_date" '+%s')) / 86400 ))  
+echo "Latest release is $curr_date_diff days old"
 
 previous_major_version=$(echo $latest_release | awk -F'.' '{print $1"."$2-1}')
 echo "previous_major_version=$previous_major_version" >>$GITHUB_ENV
@@ -35,25 +43,35 @@ current_version=$(grep -A 1 'name: summerwind/actions-runner' "$yaml_file" | gre
 echo "current_version=$current_version" >>$GITHUB_ENV
 echo "current_version: $current_version"
 
-date_diff=$(( ($(date -d "$latest_release_date" '+%s') - $(date -d "$latest_release_previous_major_date" '+%s')) / 86400 ))
-echo "Number of days between two releases: $date_diff"
-
 expected_date_diff=30
 
-if [ "$latest_release_previous_major" != "" ]; then
-  if [ "$latest_release_previous_major" != "$current_version" ]; then
-    if [ "$date_diff" -ge "$expected_date_diff" ]; then
-      echo "Upgrade timeframe is over for previous major version. Upgradding to latest version"
-      new_tag_value="${latest_release}"
-    else
-      new_tag_value="${latest_release_previous_major}"
-    fi
-    echo "updated new_tag_value: ${new_tag_value}"
-    echo "new_tag_value=$new_tag_value" >>$GITHUB_ENV
-    sed -i "s/\(newTag: \)$current_version/\1$new_tag_value/g" "$yaml_file"    
-  else
-    echo "No new releases available"
+if [ "$latest_release" != "$current_version" ]; then
+  new_tag_value=""
+  if [ "$curr_date_diff" -ge "$expected_date_diff" ]; then
+    echo "Upgrade timeframe (30 days) is over for previous major version. Upgradding to latest version"
+    new_tag_value="${latest_release}"
+  elif [ "$current_version" != "$latest_release_previous_major" ]; then
+    new_tag_value="${latest_release_previous_major}"
   fi
+
+  if [[ ! -z "$new_tag_value" ]]; then
+    echo "new_tag_value: ${new_tag_value}"
+    echo "new_tag_value=$new_tag_value" >>$GITHUB_ENV
+    sed -i "s/\(newTag: \)$current_version/\1$new_tag_value/g" "$yaml_file"
+
+    arc_tag_current_version="ajinka4ridecell/action-runner:${current_version}"
+    echo "arc_tag_current_version=$arc_tag_current_version"
+    arc_tag_value=$(echo "$new_tag_value" | sed 's/^v//')
+    echo "arc_tag_value: ${arc_tag_value}"
+    echo "arc_tag_value=$arc_tag_value" >>$GITHUB_ENV
+    for yaml_file in $arc_yaml_files; do
+      sed -i "s/\(image: \)$current_version/\1$new_tag_value/g" "$yaml_file"
+    done
+
+  else
+    echo "No need to upgrade."
+  fi
+  
 else
-  echo "No releases available for the previous major version"
+  echo "No new releases available."
 fi
