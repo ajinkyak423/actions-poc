@@ -66,7 +66,7 @@ if [ "$latest_release" != "$current_version" ]; then
     echo "arc_tag_value: ${arc_tag_value}"
     echo "arc_tag_value=$arc_tag_value" >>$GITHUB_ENV
     for arc_yaml_file in $arc_yaml_files; do
-      sed -i "s/\(image: \)$arc_tag_current_version/\1$arc_tag_new_version/g" "$arc_yaml_file"
+      sed -i "s|\(image: \)$arc_tag_current_version|\1$arc_tag_new_version|g" "$arc_yaml_file"
     done
 
   else
