@@ -1,0 +1,68 @@
+template:
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kops.k8s.io/instancegroup
+              operator: In
+              values:
+              - ci-spot-c5-xlarge-us-west-2c
+    tolerations:
+    - key: "dedicated"
+      operator: "Equal"
+      value: "ci"
+      effect: "NoSchedule"
+    # if we encounter rate limits from pulling images from docker, we will need to use our own docker creds to login and authenticate
+    # we will need to ensure a secret of type: dockerconfigjson named regcred exists
+    # imagePullSecrets:
+    # - name: regcred
+    initContainers:
+    - name: init-dind-externals
+      image: ajinka4ridecell/action-runner:v2.321.0
+      command: ["cp", "-r", "-v", "/home/runner/externals/.", "/home/runner/tmpDir/"]
+      volumeMounts:
+        - name: dind-externals
+          mountPath: /home/runner/tmpDir
+    containers:
+    - name: runner
+      image: ajinka4ridecell/action-runner:v2.320.0
+      command: ["/home/runner/run.sh"]
+      resources:
+        requests:
+          cpu: "3"
+          memory: 7000M
+      env:
+        - name: DOCKER_HOST
+          value: unix:///var/run/docker.sock
+      volumeMounts:
+        - name: work
+          mountPath: /home/runner/_work
+        - name: dind-sock
+          mountPath: /var/run
+    - name: dind
+      image: docker:dind
+      args:
+        - dockerd
+        - --host=unix:///var/run/docker.sock
+        - --group=$(DOCKER_GROUP_GID)
+      env:
+        - name: DOCKER_GROUP_GID
+          value: "123"
+      securityContext:
+        privileged: true
+      volumeMounts:
+        - name: work
+          mountPath: /home/runner/_work
+        - name: dind-sock
+          mountPath: /var/run
+        - name: dind-externals
+          mountPath: /home/runner/externals
+    volumes:
+    - name: work
+      emptyDir: {}
+    - name: dind-sock
+      emptyDir: {}
+    - name: dind-externals
+      emptyDir: {}
