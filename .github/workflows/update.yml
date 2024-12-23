@@ -85,7 +85,6 @@ jobs:
       #     https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
 
       - name: Create PR and Notify via Github-actions
-        if: env.KUSTOMIZATION_CHANGED == 'true'
         id: notify
         run: |
             git checkout -B Runner-Update_${{ env.new_tag_value }}
