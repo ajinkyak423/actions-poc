@@ -61,11 +61,12 @@ if [ "$latest_release" != "$current_version" ]; then
 
     arc_tag_current_version="ajinka4ridecell/action-runner:${current_version}"
     echo "arc_tag_current_version=$arc_tag_current_version"
+    arc_tag_new_version="ajinka4ridecell/action-runner:${new_tag_value}"
     arc_tag_value=$(echo "$new_tag_value" | sed 's/^v//')
     echo "arc_tag_value: ${arc_tag_value}"
     echo "arc_tag_value=$arc_tag_value" >>$GITHUB_ENV
-    for yaml_file in $arc_yaml_files; do
-      sed -i "s/\(image: \)$current_version/\1$new_tag_value/g" "$yaml_file"
+    for arc_yaml_file in $arc_yaml_files; do
+      sed -i "s/\(image: \)$arc_tag_current_version/\1$arc_tag_new_version/g" "$arc_yaml_file"
     done
 
   else
