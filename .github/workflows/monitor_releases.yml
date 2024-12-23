@@ -1,41 +1,30 @@
-name: Monitor Runner Releases
+# name: Monitor Runner Releases
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  monitor-releases:
-    runs-on: ubuntu-latest
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+# jobs:
+#   monitor-releases:
+#     runs-on: ubuntu-latest
+#     env:
+#       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Get Release Information
-        id: release-info
-        run: |
-          chmod +x ./get_release.sh
-          ./get_release.sh
-          # CURRENT_VERSION=${CURRENT_VERSION}
-          # latest_release=${latest_release}
-          # previous_major_version=${previous_major_version}
-          # latest_release_previous_major=${latest_release_previous_major}
-          # release_data=${release_data}
+#       - name: Get Release Information
+#         id: release-info
+#         run: |
+#           chmod +x ./get_release.sh
+#           ./get_release.sh
+#           # CURRENT_VERSION=${CURRENT_VERSION}
+#           # latest_release=${latest_release}
+#           # previous_major_version=${previous_major_version}
+#           # latest_release_previous_major=${latest_release_previous_major}
+#           # release_data=${release_data}
           
-      - name: Create PR and Notify via Github-actions
-        id: notify
-        run: |
-            git checkout -B runner-update
-            git config user.email "418982+github-actions[bot]@users.noreply.github.com"
-            git config user.name "github-actions[bot]"
-            echo "Adding files"
-            git add overlays/aws-us-support/kustomization.yml
-            git -c author.name=${{ github.actor }} -c author.email=${{ github.actor }}@users.noreply.github.com commit -m "Runner version update to ${{ env.new_tag_value }}"
-
-            git push --force --set-upstream origin runner-update   # Force push to the new branch
           
 #       - name: Update File
 #         run: |

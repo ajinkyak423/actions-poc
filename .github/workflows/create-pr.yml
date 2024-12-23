@@ -1,182 +1,107 @@
-name: summon-platform-CI
-
+name: Create PR on behalf of Workflows
 on:
-  push:
-  # workflow_dispatch:
-  #   inputs:
-  #     TENANTS_NAME:
-  #         description: "The Summon tanent name to which new tag to be deployed. EX: toka-qa"
-  #         required: true
-  #     IMAGE_TAG_VALUE:
-  #         description: "New summon platform tag to be updated"
-  #         required: true
-  #     ACTOR:
-  #         description: "Person who commited in summon platform"
-  #         required: true
-    
+  workflow_dispatch:
+    inputs:
+      REPOSITORY:
+        description: 'The Ridecell repository where PR should be created, in the format Ridecell/{repo_name}'
+        required: true
+      REF:
+        description: 'The desired branch/tag/sha to merge into main/master'
+        required: true
+      TITLE:
+        description: 'Title for the Pull Request'
+        required: true
+      BODY:
+        description: 'Text body for the Pull Request'
+        required: false
+        default: ''
+      SLACK_CHANNEL:
+        description: 'Slack channel to be notified of PR creation'
+        required: false
+        default: 'devops-eng-private'
+
 jobs:
-  Build-docker-image:
-    name: Create Pull Request
+  create-pr:
     runs-on: ubuntu-latest
-    outputs:
-      this: hii
+    name: Create Pull Request
+
     steps:
-      # - name: Setup Python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.8.15'
+      - name: Display Workflow Inputs
+        run: |
+          echo '${{ toJSON(github.event.inputs) }}'
 
-      # - name: check for deploy
-      #   if: contains(github.event.head_commit.message, 'deploy')
-      #   run: |
-      #     DEPLOY=$(echo "${{ github.event.head_commit.message }}" | sed -n 's/.*\[deploy:[[:space:]]*\([^]]*\)].*/\1/p')
-      #     echo "DEPLOY=$DEPLOY" >> $GITHUB_ENV
-
-      - name: checkout code
-        uses: actions/checkout@v4
-
-      # - name: create PR to deploy latest build to tenant
-      #   if: env.DEPLOY != null
-      #   uses: actions/checkout@v4
-      #   with:
-      #     repository: ajinkyak423/actions-poc
-      #     path: actions-poc
-      #     token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }}
-
-      # - name: directory
-      #   run: |
-      #       echo "Current directory: $(pwd)"
-      #       if [ "${{ inputs.PULL-REQUEST-NUMBER }}" == "" ]; then
-      #         echo "TENANTS_NAME is nuLL"
-      #       fi
-      #       ls -ltra
-      #       # python temp.py
-      #       # echo "deploy_tanent_file=${{ env.deploy_tanent_file }}"
-      #       time=$(date)
-      #       echo "time=$time" >> yourfile.txt
-      #       echo "CURRENT_DATE=$(date +'%s')" >> $GITHUB_ENV
-      #       cat yourfile.txt
-    
-      # - name: update file in poc
-      #   if: env.DEPLOY != null    
-      #   run: |
-      #    postData='{
-      #      "ref": "main",
-      #      "inputs": {
-      #        "TANENT_NAME": "${{ env.DEPLOY }}",
-      #        "IMAGE_TAG_VALUE": "1704395230-fd7169ac-jk-car-25367-subscription-addon-mods"
-      #      }
-      #    }'
-
-      #    curl -X POST \
-      #    -d "${postData}" \
-      #    -H "Accept: application/vnd.github+json" \
-      #    -H "Authorization: Bearer ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
-      #    -H "X-GitHub-Api-Version: 2022-11-28" \
-      #    https://api.github.com/repos/ajinkyak423/actions-poc/actions/workflows/create-pr.yml/dispatches
-
-
-
-      # - name: Create Pull Request
-      #   id: cpr
-      #   uses: peter-evans/create-pull-request@v3
-      #   with:
-      #     token: ${{ secrets.MY_GITHUB_ACTION_TOKEN }} 
-      #     commit-message: "Summon version update for ${{ inputs.TENANTS_NAME }}
+      - name: Format inputs for postdata body
+        id: post-body
+        run: |
+          # It seems although input BODY was received in JSON format (e.g. newlines escaped),
+          # the escaped values gets converted. Hence, we need to format it to JSON again for
+          # building our postData body in the next step.
           
+          echo PR_BODY=${{ toJSON(inputs.BODY) }} >> $GITHUB_OUTPUT
 
-      #      Co-authored-by: ${{ inputs.ACTOR }} <${{ inputs.ACTOR }}@users.noreply.github.com>"
-      #     committer: ${{ inputs.ACTOR }} <${{ inputs.ACTOR }}@users.noreply.github.com>
-      #     branch: ${{ env.CURRENT_DATE }}-auto-deploy
-      #     delete-branch: true
-      #     title: 'SummonPlatform version change for ${{ inputs.TENANTS_NAME }}'
-      #     labels: "automerge"
-      #     base: "main"
-          
-      # - name: Wait for PR to be ready
-      #   run: |
-      #     status=""
-      #     retry_count=6
-      #     while [[ "$status" != "clean" ]]; do
-      #       sleep 10
-      #       status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.MY_GITHUB_ACTION_TOKEN }} https://api.github.com/repos/ajinkyak423/actions-poc/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.mergeable_state' | tr -d '"')
-      #       if [[ $status -eq "behind" ]]; then
-      #         git config user.name "Update branch"
-      #         git config user.email github-actions@github.com
-      #         git checkout ${{ env.CURRENT_DATE }}-auto-deploy
-      #         git merge main --no-edit -m "Merged main branch on $(date +%F)"
-      #         git push origin ${{ env.CURRENT_DATE }}-auto-deploy
-      #       fi
-      #       echo $status
-      #       # ((retry_count--))
-      #     done
-    
-      # it has auto-update for the branch. Default option is merge for auto-update branch.
-      # - name: Enable automerge
-      #   shell: bash
-      #   run: |
-      #     response=$(curl -X PATCH \
-      #       -H "Authorization: token ${{ secrets.MY_GITHUB_ACTION_TOKEN }}" \
-      #       -H "Accept: application/vnd.github.v3+json" \
-      #       -d '{"auto_merge": true, "merge_method": "squash"}' \
-      #       "https://api.github.com/repos/ajinkyak423/actions-poc/pulls/${{ steps.cpr.outputs.pull-request-number }}")
-          
-      #     echo "Response: $response"
+      - name: Debug Info
+        run: |
+          echo "github.event_name: ${{ github.event_name }}"
+          echo "github.event.inputs.DESIRED_VERSION: ${{ inputs.PR }}"
 
-      #     echo "Auto-merge with squash merge enabled successfully."
+      - name: Create Pull Request
+        id: cpr
+        run: |
+          TOKEN="${{ secrets.MY_GITHUB_ACTION_TOKEN }}"
+          REPO="${{ github.repository }}"
+          BASE=main
+          postData='{
+            "title":"${{ inputs.TITLE }}",
+            "body":"${{ steps.post-body.outputs.PR_BODY }}",
+            "head":"${{ inputs.REF }}",
+            "base":"main"
+          }'
+          # Create the pull request and extract the PR URL directly using jq
+          pr_url=$(curl -X POST \
+            -H "Authorization: token $TOKEN" \
+            -H "Accept: application/json" \
+            -d "${postData}" \
+            "https://api.github.com/repos/$REPO/pulls" | jq -r '.html_url')
 
+          # Set the PR URL as an environment variable
+          echo "pr_url=$pr_url"
+          echo "pr_url=$pr_url" >> $GITHUB_OUTPUT
 
+          # status_code=$(echo $pr_url | jq -r '.[1].status_code')
 
-      # - name: Update PR Branch
-      #   uses: adRise/update-pr-branch@v0.7.0
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     base: 'main'
-      #     required_approval_count: 1
-          
-      # - name: PR Merge status
-      #   run: |
-      #     merged_status=$(curl -sS -H "Accept: application/vnd.github.v3+json" -u ridecell-github-action:${{ secrets.GITHUB_TOKEN }} https://api.github.com/repos/Ridecell/kubernetes-summon/pulls/${{ steps.cpr.outputs.pull-request-number }} | jq '.merged' | tr -d '"')
-      #     echo "merged_status=$merged_status"
-      #     username: GithubActions
-      #     status: custom
-      #     payload: |
-      #       {
-      #         "channel": "#${{ inputs.SLACK_CHANNEL }}",
-      #         "text": "New version available",
-      #         "blocks": [
-      #           {
-      #             "type": "header",
-      #             "text": {
-      #               "type": "plain_text",
-      #               "text": "New version available"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "plain_text",
-      #               "text": "${{steps.post-body.outputs.PR_BODY}}"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "PR: <${{steps.cpr.outputs.pr_url}}>"
-      #             }
-      #           }
-      #         ]
-      #       }
-
-  update-summon-image-tags:
-      name: 'Create PR to Update Summon Image Tags'
-      runs-on: ubuntu-latest
-      needs: Build-docker-image
-
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-
-        - name: echo
-          run: echo ${{ needs.Build-docker-image.outputs.this }}
+      - name: Notify Devops of PR
+        id: slack-notify
+        uses: sonots/slack-notice-action@v3
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+        with:
+          username: GithubActions
+          status: custom
+          payload: |
+            {
+              "channel": "#${{ inputs.SLACK_CHANNEL }}",
+              "text": "New version available",
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "New version available"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "${{steps.post-body.outputs.PR_BODY}}"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "PR: <${{steps.cpr.outputs.pr_url}}>"
+                  }
+                }
+              ]
+            }
