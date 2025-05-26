@@ -51,7 +51,7 @@ jobs:
             git diff --ext-diff origin/main...HEAD -- "$file"
             echo "-------- Testing diff in for loop end ------------"
 
-            if git diff --ext-diff origin/main...HEAD -- "$file" | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
+            if git diff --ext-diff origin/main...HEAD -- "$file" | grep -q "k8s\.ibm-plat-fr2-01-workload"; then
               CHANGED=true
               break
             fi
@@ -75,3 +75,5 @@ jobs:
           "event": "COMMENT"
           }
           EOF
+
+
