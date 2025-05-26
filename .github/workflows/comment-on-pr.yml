@@ -6,64 +6,63 @@ on:
       - synchronize
       - reopened
 jobs:
-   validation:
+  validation:
     permissions:
-        id-token: write
-        contents: read
-        issues: write
-        pull-requests: write
+      id-token: write
+      contents: read
+      issues: write
+      pull-requests: write
     runs-on: ubuntu-latest
 
     steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            fetch-depth: 2
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
-        -  name: Setup dyff diff tool
-           run: |
-            curl -L https://github.com/homeport/dyff/releases/download/v1.7.1/dyff_1.7.1_linux_amd64.tar.gz -o dyff.tar.gz
-            tar -zxvf dyff.tar.gz
-            cp dyff /usr/local/bin/dyff
+      - name: Setup dyff diff tool
+        run: |
+          curl -L https://github.com/homeport/dyff/releases/download/v1.7.1/dyff_1.7.1_linux_amd64.tar.gz \
+            -o dyff.tar.gz
+          tar -zxvf dyff.tar.gz
+          sudo mv dyff /usr/local/bin
 
-            cd "$GITHUB_WORKSPACE"
-            export GIT_DIR="$GITHUB_WORKSPACE/.git"
-            export GIT_WORK_TREE="$GITHUB_WORKSPACE"
+          # define a git diff driver named "dyff"
+          git config --local diff.dyff.command \
+            "dyff_between() { dyff --color on between --omit-header \"\$2\" \"\$5\"; }; dyff_between"
 
-            git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
-            echo '*.yml diff=dyff' >> .gitattributes
+          # register it for all .yml files
+          echo '*.yml diff=dyff' >> .gitattributes
 
-        -  name: Check modified files for any changes to k8s.ibm-plat-fr2-01-workload
-           id: check-cluster-changes
-           run: |
-            CHANGED=false
-            files_changed=$(git diff --name-only ^HEAD~1 -- '*.yml'
-            if [[ $files_changed ]]; then
-                for file in $files_changed
-                do
-                if [[ $(git diff --ext-diff ^HEAD~1 $file | grep 'k8s\.ibm-plat-fr2-01-workload') ]]; then
-                    CHANGED=true
-                    break
-                fi
-                done
+      - name: Check for k8s.ibm-plat-fr2-01-workload changes
+        id: check-cluster-changes
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git fetch origin main
+
+          CHANGED=false
+          for f in $(git diff --name-only origin/main...HEAD -- '*.yml'); do
+            if git diff --ext-diff origin/main...HEAD -- "$f" \
+               | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
+              CHANGED=true
+              break
             fi
+          done
 
-            echo "cluster_changed=$CHANGED" >> $GITHUB_OUTPUT
+          echo "cluster_changed=$CHANGED" >> $GITHUB_OUTPUT
 
-        -  name: Comment on PR
-           if: steps.check-cluster-changes.outputs.cluster_changed == 'true' && github.event_name == 'pull_request'
-           run: |
-                body="⚠️ Detected changes in \`ibm-plat-fr2-01-workload\`.
-                Please ensure the changes are authorized. You can resolve this comment once it's reviewed."
+      - name: Comment on PR
+        if: steps.check-cluster-changes.outputs.cluster_changed == 'true'
+        run: |
+          body="⚠️ Detected changes in \`ibm-plat-fr2-01-workload\`. Please ensure the changes are authorized."
 
-                    curl -s -X POST \
-                    -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                    -H "Accept: application/vnd.github+json" \
-                    https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
-                    -d @- <<EOF
-                {
-                "body": "$body",
-                "event": "COMMENT"
-                }
-                EOF
-            
+          curl -s -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
+            -d @- <<EOF
+          {
+            "body": "${body}",
+            "event": "COMMENT"
+          }
+          EOF
