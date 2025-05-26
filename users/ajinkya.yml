@@ -1,0 +1,21 @@
+k8s:
+  ibm-plat-fr2-01-workload:
+    dev-access-testing:
+      - role: readOnly
+        expiresOn: 2025-06-28
+      - role: readSecrets
+        expiresOn: 2025-06-28
+      - role: exec
+        expiresOn: 2025-06-28
+      - role: restart
+        expiresOn: 2025-06-26
+  ibm-eu-dev:
+    intelligence-rva:
+      - role: readOnly
+        expiresOn: 2025-06-28
+      - role: readSecrets
+        expiresOn: 2025-06-28
+      - role: exec
+        expiresOn: 2025-06-28
+      - role: restart
+        expiresOn: 2025-06-28
