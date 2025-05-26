@@ -39,10 +39,11 @@ jobs:
             # Added to slove fatal: detected dubious ownership in repository at '/__w/infra-auth/infra-auth' error.
             git config --global --add safe.directory "$GITHUB_WORKSPACE"
             git fetch origin main
+            CHANGED=false
             for file in $(git diff --name-only ^HEAD~1 -- '*.yml'); do
                 if git diff --ext-diff ^HEAD~1 $file | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
-                CHANGED=true
-                break
+                    CHANGED=true
+                    break
                 fi
             done
 
