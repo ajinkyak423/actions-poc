@@ -36,7 +36,7 @@ jobs:
         -  name: Check modified files for any changes to k8s.ibm-plat-fr2-01-workload
            id: check-cluster-changes
            run: |
-            CHANGED=flase
+            CHANGED=false
             git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
             for file in $(git diff --name-only origin/${{ github.event.pull_request.base.ref }} -- '*.yml'); do
                 if git diff origin/${{ github.event.pull_request.base.ref }} $file | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
