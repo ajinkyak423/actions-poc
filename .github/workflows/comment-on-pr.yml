@@ -37,7 +37,7 @@ jobs:
         id: check-cluster-changes
         run: |
           CHANGED=false
-          files_changed=$(git diff --name-only ^HEAD~1 -- '*.yml' )
+          files_changed=$(git diff --name-only ^HEAD~1 )
           if [[ $files_changed ]]; then
             for file in $files_changed
             do
