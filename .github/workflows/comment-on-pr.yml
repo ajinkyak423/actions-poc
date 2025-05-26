@@ -72,7 +72,7 @@ jobs:
               -d @- <<EOF
           {
           "body": "$body",
-          "event": "COMMENT"
+          "event": "REQUEST_CHANGES"
           }
           EOF
 
