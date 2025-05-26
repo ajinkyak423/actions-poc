@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# yes
 yaml_file="kustomization.yml"
 
 release_metadata=$(curl -s https://api.github.com/repos/actions/runner/releases/latest)
@@ -66,6 +66,3 @@ if [ "$latest_release_previous_major" != "" ]; then
 else
   echo "No releases available for the previous major version"
 fi
-
-
-
