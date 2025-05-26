@@ -67,3 +67,4 @@ else
   echo "No releases available for the previous major version"
 fi
 
+
