@@ -66,3 +66,6 @@ if [ "$latest_release_previous_major" != "" ]; then
 else
   echo "No releases available for the previous major version"
 fi
+
+
+
