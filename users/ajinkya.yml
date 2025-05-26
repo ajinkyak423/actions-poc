@@ -12,7 +12,7 @@ k8s:
   ibm-eu-dev:
     intelligence-rva:
       - role: readOnly
-        expiresOn: 2025-06-28
+        expiresOn: 2025-06-22
       - role: readSecrets
         expiresOn: 2025-06-22
       - role: exec
