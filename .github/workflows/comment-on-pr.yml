@@ -57,6 +57,8 @@ jobs:
             fi
           done
           echo "cluster_changed=$CHANGED"
+          echo "changed_file_name"=$file
+          echo "changed_file_name"=$file >> $GITHUB_OUTPUT
           echo "cluster_changed=$CHANGED" >> $GITHUB_OUTPUT
           
       - name: Comment on PR
@@ -72,7 +74,8 @@ jobs:
               -d @- <<EOF
           {
           "body": "$body",
-          "event": "REQUEST_CHANGES"
+          "event": "COMMENT",
+          "comments": [{"path": "${{ steps.check-cluster-changes.outputs.changed_file_name }},"position":1,"body":"Please add more information here, and fix this typo."}]
           }
           EOF
 
