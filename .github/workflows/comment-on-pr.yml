@@ -24,14 +24,14 @@ jobs:
            run: |
             curl -L https://github.com/homeport/dyff/releases/download/v1.7.1/dyff_1.7.1_linux_amd64.tar.gz -o dyff.tar.gz
             tar -zxvf dyff.tar.gz
-            sudo cp dyff /usr/local/bin/dyff
+            cp dyff /usr/local/bin/dyff
 
             cd "$GITHUB_WORKSPACE"
             export GIT_DIR="$GITHUB_WORKSPACE/.git"
             export GIT_WORK_TREE="$GITHUB_WORKSPACE"
 
-            sudo git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
-            echo '*.yml diff=dyff' >> "$GITHUB_WORK_TREE/.gitattributes"
+            git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
+            echo '*.yml diff=dyff' >> .gitattributes
 
         -  name: Check modified files for any changes to k8s.ibm-plat-fr2-01-workload
            id: check-cluster-changes
