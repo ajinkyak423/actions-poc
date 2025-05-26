@@ -1,22 +1,22 @@
-name: slack-notify
-on:
-  push:
+# name: slack-notify
+# on:
+#   push:
    
-jobs:
-  slack-notify:
-    runs-on: ubuntu-latest
-    container:
-        image: ajinka4ridecell/krr:v11
+# jobs:
+#   slack-notify:
+#     runs-on: ubuntu-latest
+#     container:
+#         image: ajinka4ridecell/krr:v11
 
-    steps:
-      - name: Check Out Repository
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Check Out Repository
+#         uses: actions/checkout@v2
 
-      - name: create csv
-        run: |
-          touch test.csv
-          pip list 
+#       - name: create csv
+#         run: |
+#           touch test.csv
+#           pip list 
 
-      - name: Send CSV to Slack
-        run: |
-            python temp/krr_batch_processing.py
+#       - name: Send CSV to Slack
+#         run: |
+#             python temp/krr_batch_processing.py
