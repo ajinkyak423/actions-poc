@@ -30,7 +30,7 @@ jobs:
             export GIT_DIR="$GITHUB_WORKSPACE/.git"
             export GIT_WORK_TREE="$GITHUB_WORKSPACE"
 
-            git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
+            sudo git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
             echo '*.yml diff=dyff' >> "$GITHUB_WORK_TREE/.gitattributes"
 
         -  name: Check modified files for any changes to k8s.ibm-plat-fr2-01-workload
