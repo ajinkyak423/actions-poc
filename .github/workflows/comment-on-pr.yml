@@ -51,44 +51,17 @@ jobs:
         -   name: Comment on PR
             if: steps.check-cluster-changes.outputs.cluster_changed == 'true' && github.event_name == 'pull_request'
             run: |
-                # Find the first matching file and line number
-                git fetch origin main
-                FILE_LINE=$(git diff -U0 origin/main...HEAD -- '*.yml' | grep -n 'k8s\.ibm-plat-fr2-01-workload' | head -1)
-                
-                if [ -z "$FILE_LINE" ]; then
-                echo "No matching line found."
-                exit 0
-                fi
+                body="⚠️ Detected changes in \`ibm-plat-fr2-01-workload\`.
+                Please ensure the changes are authorized. You can resolve this comment once it's reviewed."
 
-                LINE_NUM=$(echo "$FILE_LINE" | cut -d':' -f1)
-                LINE_CONTENT=$(echo "$FILE_LINE" | cut -d':' -f2-)
-                FILE_PATH=$(git diff --name-only origin/main...HEAD -- '*.yml' | grep -F "$LINE_CONTENT" | head -1)
-
-                # Use GitHub API to find the correct position in the diff
-                POSITION=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github+json" \
-                https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files \
-                | jq ".[] | select(.filename == \"$FILE_PATH\") | .patch" \
-                | grep -n '^+' | head -1 | cut -d':' -f1)
-
-                if [ -z "$POSITION" ]; then
-                echo "Unable to determine diff position."
-                exit 0
-                fi
-
-                # Post the inline resolvable comment
-                COMMENT="⚠️ Detected changes involving \`ibm-plat-fr2-01-workload\`. Please verify these changes are authorized."
-
-                curl -s -X POST \
-                -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                -H "Accept: application/vnd.github+json" \
-                https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/comments \
-                -d @- <<EOF
+                    curl -s -X POST \
+                    -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                    -H "Accept: application/vnd.github+json" \
+                    https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
+                    -d @- <<EOF
                 {
-                "body": "$COMMENT",
-                "commit_id": "${{ github.event.pull_request.head.sha }}",
-                "path": "$FILE_PATH",
-                "side": "RIGHT",
-                "position": $POSITION
+                "body": "$body",
+                "event": "COMMENT"
                 }
                 EOF
+            
