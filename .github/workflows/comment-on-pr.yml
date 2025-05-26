@@ -37,10 +37,11 @@ jobs:
            id: check-cluster-changes
            run: |
             CHANGED=flase
-            for file in $(git diff --name-only ^HEAD~1 -- '*.yml'); do
-                if git diff --ext-diff ^HEAD~1 $file | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
-                CHANGED=true
-                break
+            git fetch origin ${{ github.event.pull_request.base.ref }} --depth=1
+            for file in $(git diff --name-only origin/${{ github.event.pull_request.base.ref }} -- '*.yml'); do
+                if git diff origin/${{ github.event.pull_request.base.ref }} $file | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
+                    CHANGED=true
+                    break
                 fi
             done
 
