@@ -40,7 +40,7 @@ jobs:
             git config --global --add safe.directory "$GITHUB_WORKSPACE"
             git fetch origin main
             for file in $(git diff --name-only origin/main...HEAD -- '*.yml'); do
-                if git diff --ext-diff origin/main...HEAD -- "$file" | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
+                if git diff --ext-diff ^HEAD~1 $file | grep -q 'k8s\.ibm-plat-fr2-01-workload'; then
                 CHANGED=true
                 break
                 fi
