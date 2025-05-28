@@ -34,7 +34,7 @@ jobs:
           git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
           echo '*.yml diff=dyff' >> ".gitattributes"
 
-      - name: Check modified files for any changes
+      - name: Check modified files for any changes to IBM clusters
         id: check-cluster-changes
         run: |
           # Added to slove fatal: detected dubious ownership in repository at '/__w/infra-auth/infra-auth' error.
@@ -45,49 +45,26 @@ jobs:
           git diff --name-only origin/main...HEAD -- '*.yml'
           echo "-------- Testing diff end ------------"
 
+
           for file in $(git diff --name-only origin/main...HEAD -- '*.yml'); do
 
             echo "-------- Testing diff in for loop start ------------"
             git diff --ext-diff origin/main...HEAD -- "$file"
             echo "-------- Testing diff in for loop end ------------"
 
-            if git diff --ext-diff origin/main...HEAD -- "$file" | grep -q "ibm-plat-fr2-01-workload"; then
+            if git diff --ext-diff origin/main...HEAD -- "$file" | grep -q "ibm-plat-fr2-01"; then
               CHANGED=true
               break
             fi
           done
-          echo "cluster_changed=$CHANGED"
-          echo "changed_file_name"=$file
           echo "changed_file_name"=$file >> $GITHUB_OUTPUT
           echo "cluster_changed=$CHANGED" >> $GITHUB_OUTPUT
-          
+
       - name: Comment on PR
         if: steps.check-cluster-changes.outputs.cluster_changed == 'true' && github.event_name == 'pull_request'
         run: |
-            body="⚠️ Detected changes in \`ibm-plat-fr2-01-workload\`.
-            Please ensure the changes are authorized. You can resolve this comment once it's reviewed."
-
-            file="${{ steps.check-cluster-changes.outputs.changed_file_name }}"
-
-            payload=$(jq -n \
-                --arg body "$body" \
-                --arg path "$file" \
-                '{
-                body: $body,
-                event: "COMMENT",
-                comments: [
-                    {
-                    path: $path,
-                    position: 1,
-                    body: "Please add more information here, and fix this typo."
-                    }
-                ]
-                }'
-            )
-
-            # 4. post the review
-            curl -s -X POST \
+          curl -sX POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews \
-            -d "$payload"
+            -d '{"body":"⚠️ Detected changes in `IBM BNPP` clusters. Please ensure the changes are authorized.","event":"COMMENT","comments":[{"path":"'${{ steps.check-cluster-changes.outputs.changed_file_name }}'","position":1,"body":"Please follow the access policies for the IBM BNPP infra."}]}'

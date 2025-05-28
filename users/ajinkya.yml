@@ -8,13 +8,13 @@ k8s:
       - role: exec
         expiresOn: 2025-06-28
       - role: restart
-        expiresOn: 2025-06-25
+        expiresOn: 2025-06-26
   ibm-eu-dev:
     intelligence-rva:
       - role: readOnly
         expiresOn: 2025-06-28
       - role: readSecrets
-        expiresOn: 2025-06-22
+        expiresOn: 2025-06-25
       - role: exec
         expiresOn: 2025-06-22
       - role: restart
