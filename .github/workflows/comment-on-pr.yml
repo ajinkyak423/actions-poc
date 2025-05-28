@@ -14,25 +14,15 @@ jobs:
       issues: write
       pull-requests: write
     runs-on: ubuntu-latest
+    container:
+      # use container image for tools already installed
+      image: docker.io/ajinka4ridecell/infra-auth:v2
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
-
-      - name: Setup dyff diff tool
-        run: |
-          curl -L https://github.com/homeport/dyff/releases/download/v1.7.1/dyff_1.7.1_linux_amd64.tar.gz -o dyff.tar.gz
-          tar -zxvf dyff.tar.gz
-          cp dyff /usr/local/bin/dyff
-
-          cd "$GITHUB_WORKSPACE"
-          export GIT_DIR="$GITHUB_WORKSPACE/.git"
-          export GIT_WORK_TREE="$GITHUB_WORKSPACE"
-
-          git config --file "$GIT_DIR/config" diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between'
-          echo '*.yml diff=dyff' >> ".gitattributes"
 
       - name: Check modified files for any changes to IBM clusters
         id: check-cluster-changes
@@ -41,12 +31,15 @@ jobs:
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           git fetch origin main
 
+          git config --global diff.dyff.command 'dyff_between() { dyff --color on between --omit-header "$2" "$5"; }; dyff_between' && \
+          echo '*.yml diff=dyff' >> .gitattributes 
+
           echo "-------- Testing diff start ------------"
-          git diff --name-only origin/main...HEAD -- '*.yml'
+          git diff --name-only origin/main...HEAD -- 'users/*.yml'
           echo "-------- Testing diff end ------------"
 
 
-          for file in $(git diff --name-only origin/main...HEAD -- '*.yml'); do
+          for file in $(git diff --name-only origin/main...HEAD -- 'users/*.yml'); do
 
             echo "-------- Testing diff in for loop start ------------"
             git diff --ext-diff origin/main...HEAD -- "$file"
