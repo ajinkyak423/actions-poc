@@ -3,7 +3,7 @@ name: test-hello
 on:
   workflow_dispatch:
   schedule:
-    - cron: "41 11 * * *"
+    - cron: "00 12 * * *"
 
 concurrency:
   group: ${{ github.ref }}
@@ -12,7 +12,7 @@ concurrency:
 jobs:
   hello-job-1:
     name: hello-job-1
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '41 11 * * *'
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '00 12 * * *'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,7 +23,7 @@ jobs:
 
   hello-job-2:
     name: hello-job-2
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '42 11 * * *'
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '01 12 * * *'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -34,7 +34,7 @@ jobs:
 
   hello-job-3:
     name: hello-job-3
-    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '43 11 * * *'
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '02 12 * * *'
     runs-on: ubuntu-latest
     defaults:
       run:
