@@ -3,7 +3,9 @@ name: test-hello
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 12 * * 1"
+    # every hour at minute 11 (picking odd minutes to prevent potential
+    # overlap of scheduled github action load)
+    - cron: "*/10 * * * *"
 
 concurrency:
   group: ${{ github.ref }}
