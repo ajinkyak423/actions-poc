@@ -4,7 +4,7 @@ k8s:
       - role: readOnly
         expiresOn: 2025-06-28
       - role: readSecrets
-        expiresOn: 2025-06-28
+        expiresOn: 2025-06-25
       - role: exec
         expiresOn: 2025-06-28
       - role: restart
